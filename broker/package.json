@@ -1,0 +1,14 @@
+{
+  "name": "chat-broker",
+  "version": "1.0.0",
+  "description": "Messages broadcast for chat",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Ilya Bogdan",
+  "license": "ISC",
+  "dependencies": {
+    "ws": "^8.16.0"
+  }
+}
