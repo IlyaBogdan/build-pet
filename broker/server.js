@@ -1,44 +1,7 @@
 import { WebSocketServer } from 'ws';
-import {v4 as uuidv4} from 'uuid';
-
-class User {
-
-    username;
-
-    constructor() {
-        this.id = uuidv4();
-        this.active = false;
-        this.chats = [];
-    }
-
-    setUsername(username) {
-        this.username = username;
-    }
-}
-
-class Chat {
-
-    title;
-
-    constructor(users) {
-        this.id = uuidv4();
-        this.users = [];
-        this.messages = [];
-        this.title = `Chat #${this.id}`;
-    }
-
-    setTitle(title) {
-        this.title = title;
-    }
-}
-
-class Message {
-
-    constructor(author, content) {
-        this.author = author;
-        this.content = content;
-    }
-}
+import { User } from './entities/User.js';
+import { Chat } from './entities/Chat.js';
+import { Message } from './entities/Message.js';
 
 const users = [];
 const chats = [];
@@ -57,14 +20,6 @@ const methods = {
         return { method: 'setUser', user };
     },
 
-    setUsername: (body) => {
-        // body format: { method: setUsername, user: UserObj, username: String }
-
-        const user = users.filter((user) => user.id == body.user.id)[0];
-        user.username = body.username;
-
-        return { method: 'setUsername', user };
-    },
     setTyping: (body) => {
         // body format: { method: setTyping, user: UserObj, chat: ChatObj, typing: bool }
 
@@ -94,6 +49,9 @@ const methods = {
         dst.chats.push(chat);
 
         return chat;
+    },
+    getUsers: (body) => {
+        return { method: 'setUserList', users };
     },
 
     setOnline: (user) => {
