@@ -10,7 +10,7 @@
             <div class="user-list-items">
                 <div class="user-list-item" v-for="(user) in userList" :key="user.id">
                     <div>{{ user.username }}</div>
-                    <link-ui href="">Message</link-ui>
+                    <link-ui @click="openChat(user)">Message</link-ui>
                 </div>
             </div>
         </div>
@@ -20,65 +20,49 @@
 
 <script>
 
-    const ReactAPI = {
-        pull: (self) => {
-            self.pull();
-        },
-        setUser: (self, body) => {
-            self.user = body.user;
-            localStorage.setItem('user', JSON.stringify(body.user));
-        },
-        setUserList: (self, body) => {
-            self.userList = body.users.filter((user) => user.id != self.user.id);
+import { Chat } from "@/utils/Chat";
+import { ChatInterceptor } from "@/utils/ChatInterceptor";
+
+const interceptor = new ChatInterceptor();
+const chat = new Chat();
+
+export default {
+    name: "ChatElement",
+    data() {
+        return {
+            user: undefined,
+            online: false,
+            userList: [],
+            messages: [],
+            reconnect: undefined
         }
-    };
+    },
+    mounted() {
+        this.user = JSON.parse(localStorage.getItem('user'));
 
-    export default {
-        name: "ChatElement",
-        data() {
-            return {
-                user: undefined,
-                online: false,
-                connection: undefined,
-                userList: [],
-                messages: [],
-                reconnect: undefined
-            }
-        },
-        mounted() {
-            this.user = JSON.parse(localStorage.getItem('user'));
-
-            this.connection = this.getConnection();
-
-            this.connection.onmessage = (response) => {
-                const data = JSON.parse(response.data);
-
-                ReactAPI[data.method](this, data);
-            }
-
-            this.connection.onopen  = () => { 
+        console.log(chat);
+        chat.onOpen(() => {
                 this.online = true;
-                this.getUsers();
-            }
-            this.connection.onclose = () => { 
+                chat.api.getUsers();
+            })
+            .onClose(() => {
                 this.online = false;
-            }
+            })
+            .interceptor(
+                (response) => {
+                    const data = JSON.parse(response.data);
+                    interceptor.api[data.method](this, data);
+                }
+            );
+    },
+    methods: {
+        openChat(dst) {
+            const url = `/chat?user=${dst.id}`;
 
-        },
-        methods: {
-            getConnection() {
-                return new WebSocket('ws://localhost:3000');
-            },
-            wsSend(body) {
-                this.connection.send(JSON.stringify(body));
-            },
-
-            createUser() { this.wsSend({ method: 'createUser' }); },
-            pull()       { this.wsSend({ method: 'pull', user: this.user }); },
-            getUsers()   { this.wsSend({ method: 'getUsers' }); }
-            
+            window.history.replaceState({}, '', url);
         }
     }
+}
 </script>
 
 <style lang="scss">
