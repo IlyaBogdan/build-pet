@@ -5,16 +5,16 @@
             <div v-if="!online && reconnect">Trying to reconnecting after {{ reconnect }} s</div>
         </div>
         
-
         <div class="user-list" v-if="userList.length">
             <div class="user-list-title">Users: </div>
             <div class="user-list-items">
                 <div class="user-list-item" v-for="(user) in userList" :key="user.id">
                     <div>{{ user.username }}</div>
-                    <a href="">Message</a>
+                    <link-ui href="">Message</link-ui>
                 </div>
             </div>
         </div>
+        <button-ui type="primary">Test</button-ui>
     </div>
 </template>
 
@@ -29,8 +29,7 @@
             localStorage.setItem('user', JSON.stringify(body.user));
         },
         setUserList: (self, body) => {
-            self.userList = body.users;
-            console.log(self.userList);
+            self.userList = body.users.filter((user) => user.id != self.user.id);
         }
     };
 
@@ -53,7 +52,6 @@
 
             this.connection.onmessage = (response) => {
                 const data = JSON.parse(response.data);
-                console.log(data);
 
                 ReactAPI[data.method](this, data);
             }
