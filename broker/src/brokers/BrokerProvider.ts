@@ -5,15 +5,18 @@ const brokers = [
     new ChatBroker
 ];
 
-const methods: BrokerApi = {};
+const execute = (message: { method: String }) => {
+    let result;
 
-brokers.forEach(broker => Object.assign(methods, broker.api));
+    for (const broker of brokers) {
+        if (broker.methodExists(message.method as keyof BrokerApi)) {
+            console.log(`Runnning: ${message.method}`);
+            const closure = broker.call(message.method as keyof BrokerApi);
+            result = closure(message);
+        }
+    }
 
-setInterval(function() {
-    console.clear();
-    console.log('Server state');
-    
-}, 1000);
+    return result;
+}
 
-
-export { methods };
+export { execute };

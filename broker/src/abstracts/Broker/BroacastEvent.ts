@@ -1,6 +1,6 @@
 
 
-import EventEmitter from 'node:events';
+import { EventEmitter } from 'events';
 import { User } from '../../entities/User';
 import { WebSocketEntry } from '../..';
 import { WebSocket } from 'ws';

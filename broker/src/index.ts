@@ -1,5 +1,5 @@
 import { WebSocketServer, RawData } from 'ws';
-import { methods } from './brokers/BrokerProvider';
+import { execute } from './brokers/BrokerProvider';
 import { BrokerMessage } from './abstracts/Broker/BrokerMessage';
 import { BrokerApi } from './abstracts/Broker/BrokerApi';
 
@@ -13,6 +13,8 @@ const WebSocketEntry = (() => {
             else {
                 server = new WebSocketServer({ port: 3000 });
 
+                console.log('WebSocket is running on 3000 port');
+
                 server.on('connection', function (ws) {
 
                     ws.send(JSON.stringify({ method: 'pull' }));
@@ -21,9 +23,9 @@ const WebSocketEntry = (() => {
                         if (BrokerMessage.validateFormat(message)) {
                             const brokerMessage = BrokerMessage.getInstance();
                 
-                            const { method } = brokerMessage;
-                            const methodKey = method as keyof BrokerApi;
-                            const result = methods[methodKey].action(message);
+                            console.log(`Accepted: `, brokerMessage);
+                            const result = execute(brokerMessage);
+                            console.log('Response: ', result);
                 
                             ws.send(JSON.stringify(result));
                         }

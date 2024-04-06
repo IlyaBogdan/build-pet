@@ -8,6 +8,5 @@ type BrokerApiMethod = {
 }
 
 export type BrokerApi = {
-    setBroker: Function;
     [key: string]: BrokerApiMethod;
 }

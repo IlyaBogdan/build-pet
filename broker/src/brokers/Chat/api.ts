@@ -11,7 +11,7 @@ export const api: BrokerApi = {
     pull: {
         format: { method: 'pull', user: User },
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
-            let user;
+            let user: User;
 
             if (body.user) 
                 try {
@@ -21,7 +21,7 @@ export const api: BrokerApi = {
                 }
             else user = broker.createUser()
 
-            api.setOnline.action(user);
+            api.setOnline.action(user, broker);
 
             return { method: 'setUser', user };
         }
@@ -75,7 +75,7 @@ export const api: BrokerApi = {
     },
     getUsers: {
         format: { method: 'getUsers' },
-        action: (broker: ChatBroker) => {
+        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
             return { method: 'setUserList', users: broker.users };
         }
     },
