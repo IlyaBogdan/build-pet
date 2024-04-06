@@ -1,6 +1,6 @@
 <template lang="">
     <div class="send-message">
-        <input-ui v-model="message" />
+        <textarea @keyup.enter="send" @input="checkSize" v-model="message"></textarea>
         <button-ui @click="send" type="primary">Send</button-ui>
     </div>
 </template>
@@ -14,7 +14,19 @@ export default {
     },
     methods: {
         send() {
-            console.log(this.message);
+            if (this.message.length) {
+                this.$emit('sendMessage', this.message);
+                this.message = '';
+            }
+        },
+        mounted() {
+            const tx = document.getElementsByTagName("textarea")[0];
+
+            tx.setAttribute("style", "height:" + (tx[0].scrollHeight) + "px;overflow-y:hidden;");
+            tx.addEventListener("input", function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + "px";
+            }, false);
         }
     }
 }
@@ -23,5 +35,10 @@ export default {
     .send-message {
         display: flex;
 
+        .input-ui {
+            padding: 0;
+            margin-right: 15px;
+            display: inline-block;
+        }
     }
 </style>

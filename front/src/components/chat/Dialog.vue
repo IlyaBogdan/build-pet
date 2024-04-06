@@ -9,7 +9,7 @@
             </div>
         </div>
 
-        <send-message-field />
+        <send-message-field @sendMessage="send" />
     </div>
 </template>
 <script>
@@ -43,6 +43,15 @@ export default {
             }
 
             return undefined;
+        },
+        send(message) {
+            this.messages.push({
+                user: user1,
+                type: 'out',
+                date: new Date(),
+                content: message
+            });
+            console.log(message);
         }
     },
 
@@ -67,6 +76,10 @@ export default {
                     }
                 }
             }
+        }
+
+        .send-message {
+            margin: 20px;
         }
     }
 </style>
