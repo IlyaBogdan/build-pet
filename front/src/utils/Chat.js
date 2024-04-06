@@ -5,6 +5,7 @@ export const Chat = (() => {
     const connection = new WebSocket('ws://localhost:3000');
 
     const wsSend = (body) => {
+        body.date = new Date();
         connection.send(JSON.stringify(body));
     }
 

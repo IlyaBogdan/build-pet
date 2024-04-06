@@ -14,7 +14,8 @@
                 </div>
             </div>
         </div>
-        <button-ui type="primary">Test</button-ui>
+
+        <chat-dialog />
     </div>
 </template>
 
@@ -22,11 +23,13 @@
 
 import { Chat } from "@/utils/Chat";
 import { ChatInterceptor } from "@/utils/ChatInterceptor";
+import ChatDialog from './Dialog.vue';
 
 const interceptor = new ChatInterceptor();
 const chat = new Chat();
 
 export default {
+    components: { ChatDialog },
     name: "ChatElement",
     data() {
         return {
@@ -102,5 +105,10 @@ export default {
 
             }
         }
+    }
+
+    .dialog {
+        margin: 20px;
+        
     }
 </style>

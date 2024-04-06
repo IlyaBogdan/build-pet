@@ -29,6 +29,8 @@ export class BroadcastEvent extends EventEmitter {
 const broadCast = new BroadcastEvent();
 
 broadCast.on('broadcast', (data: MessageFormat) => {
+  console.log(`Broadcast: `, data);
+
   const server = WebSocketEntry.getServer();
 
   //const clients = data.clients ?? server.clients;
@@ -36,6 +38,7 @@ broadCast.on('broadcast', (data: MessageFormat) => {
 
   clients.forEach((client: WebSocket) => {
     const message = JSON.stringify(data);
+
     if (data.clients) delete data.clients;
     client.send(message);
   })
