@@ -33,6 +33,7 @@ export const api: BrokerApi = {
     
             const user = broker.getUser(body.user!.id);
             const chat = broker.getChat(body.chat!.id);
+            
     
             return chat;
         }

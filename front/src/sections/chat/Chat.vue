@@ -6,7 +6,7 @@
         </div>
         
         <user-list :users="userList"/>
-        <chat-dialog />
+        <chat-dialog @sendMessage="sendMessage"/>
     </div>
 </template>
 
@@ -17,15 +17,10 @@
  * 2) 
  */
 
-import { useRouter, useRoute } from 'vue-router'
 
-import { Chat } from "@/utils/Chat";
-import { ChatInterceptor } from "@/utils/ChatInterceptor";
+import { ChatConnection } from "@/utils/connections/chat/ChatConnection";
 import ChatDialog from './Dialog.vue';
 import UserList from './components/UsersList.vue';
-
-const interceptor = new ChatInterceptor();
-const chat = new Chat();
 
 export default {
     components: { ChatDialog, UserList },
@@ -35,33 +30,36 @@ export default {
             user: undefined,
             online: false,
             userList: [],
-            messages: [],
-            reconnect: undefined
+            reconnect: undefined,
+            connection: undefined
         }
     },
     mounted() {
         this.user = JSON.parse(localStorage.getItem('user'));
 
-        console.log(chat);
-        chat.onOpen(() => {
-                this.online = true;
-                chat.api.getUsers();
-            })
-            .onClose(() => {
-                this.online = false;
-            })
-            .interceptor(
-                (response) => {
-                    const data = JSON.parse(response.data);
-                    interceptor.api[data.method](this, data);
-                }
-            );
+        this.connection = new ChatConnection().intercept(this);
+
+        this.connection.onOpen(() => {
+            this.online = true;
+            this.connection.call('getUsers', { user: this.user });
+        })
+        .onClose(() => {
+            this.online = false;
+        })
+        
     },
     methods: {
         openChat(dst) {
             const url = `/chat?user=${dst.id}`;
 
             window.history.replaceState({}, '', url);
+        },
+        sendMessage(message) {
+            // 1. Prepare message
+            // 2. call connection method 'sendMessage'
+
+            message.user = this.user;
+            this.connection.call('sendMessage', message);
         }
     }
 }

@@ -4,7 +4,7 @@
         <div class="user-list-items">
             <div class="user-list-item" v-for="(user) in users" :key="user.id">
                 <div>{{ user.username }}</div>
-                <router-link @click="openChat(user)">Message</router-link>
+                <link-ui @click="openChat(user)">Message</link-ui>
             </div>
         </div>
     </div>

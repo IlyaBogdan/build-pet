@@ -1,6 +1,12 @@
 <template lang="">
     <div class="send-message">
-        <textarea @keyup.enter="send" @input="checkSize" v-model="message"></textarea>
+        <textarea 
+            @keyup.enter="send"
+            @input="checkSize"
+            v-model="message"
+            @focus="$emit('typing', true)"
+            @blur="$emit('typing', false)"
+        ></textarea>
         <button-ui @click="send" type="primary">Send</button-ui>
     </div>
 </template>
@@ -16,6 +22,7 @@ export default {
         send() {
             if (this.message.length) {
                 this.$emit('sendMessage', this.message);
+                this.$emit('typing', false);
                 this.message = '';
             }
         },

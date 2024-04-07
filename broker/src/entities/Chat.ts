@@ -8,6 +8,7 @@ export class Chat {
     public title: String;
     public users: Array<User>;
     public messages: Array<Message>;
+    public usersTyping: Array<User> = [];
 
     constructor(users: Array<User>) {
         this.id = uuidv4();
