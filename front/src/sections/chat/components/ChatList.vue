@@ -11,7 +11,7 @@
 </template>
 <script>
 export default {
-    name: "user-list",
+    name: "chat-list",
     props: {
         users: {
             type: Array

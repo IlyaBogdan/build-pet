@@ -17,7 +17,7 @@ export class ChatInterceptor extends WsMessageInterceptor {
                 localStorage.setItem('user', JSON.stringify(body.user));
             },
             setUserList: (body) => {
-                self.userList = body.users;
+                self.userList = body.users.filter((user) => user.id != self?.user.id);
             }
         }
     }

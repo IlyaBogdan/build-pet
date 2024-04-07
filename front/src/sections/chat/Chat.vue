@@ -5,7 +5,7 @@
             <div v-if="!online && reconnect">Trying to reconnecting after {{ reconnect }} s</div>
         </div>
         
-        <user-list :users="userList"/>
+        <chat-list :users="userList"/>
         <chat-dialog @sendMessage="sendMessage"/>
     </div>
 </template>
@@ -20,10 +20,10 @@
 
 import { ChatConnection } from "@/utils/connections/chat/ChatConnection";
 import ChatDialog from './Dialog.vue';
-import UserList from './components/UsersList.vue';
+import ChatList from './components/ChatList.vue';
 
 export default {
-    components: { ChatDialog, UserList },
+    components: { ChatDialog, ChatList },
     name: "ChatElement",
     data() {
         return {
