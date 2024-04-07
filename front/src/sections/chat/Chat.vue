@@ -20,6 +20,11 @@
 </template>
 
 <script>
+/**
+ * TODO
+ * 1) Open chat whit other users by link
+ * 2) 
+ */
 
 import { Chat } from "@/utils/Chat";
 import { ChatInterceptor } from "@/utils/ChatInterceptor";

@@ -13,6 +13,12 @@
     </div>
 </template>
 <script>
+/**
+ * TODO
+ * 1) Groping messages by date like VK
+ * 2) Show, if other user typing message
+ * 3) 
+ */
 
 import DialogMessage from './components/DialogMessage.vue';
 import SendMessageField from './components/SendMessageField.vue';
