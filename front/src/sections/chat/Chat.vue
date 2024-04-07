@@ -5,16 +5,7 @@
             <div v-if="!online && reconnect">Trying to reconnecting after {{ reconnect }} s</div>
         </div>
         
-        <div class="user-list" v-if="userList.length">
-            <div class="user-list-title">Users: </div>
-            <div class="user-list-items">
-                <div class="user-list-item" v-for="(user) in userList" :key="user.id">
-                    <div>{{ user.username }}</div>
-                    <link-ui @click="openChat(user)">Message</link-ui>
-                </div>
-            </div>
-        </div>
-
+        <user-list :users="userList"/>
         <chat-dialog />
     </div>
 </template>
@@ -26,15 +17,18 @@
  * 2) 
  */
 
+import { useRouter, useRoute } from 'vue-router'
+
 import { Chat } from "@/utils/Chat";
 import { ChatInterceptor } from "@/utils/ChatInterceptor";
 import ChatDialog from './Dialog.vue';
+import UserList from './components/UsersList.vue';
 
 const interceptor = new ChatInterceptor();
 const chat = new Chat();
 
 export default {
-    components: { ChatDialog },
+    components: { ChatDialog, UserList },
     name: "ChatElement",
     data() {
         return {
@@ -91,24 +85,6 @@ export default {
 
         &[data-online="true"] {
             background-color: rgb(74, 194, 50);
-        }
-    }
-
-    .user-list {
-        width: 550px;
-        display: flex;
-        flex-direction: column;
-
-        .user-list-items {
-            display: flex;
-            flex-direction: column;
-
-            .user-list-item {
-                margin-top: 10px;
-                display: flex;
-                justify-content: space-between;
-
-            }
         }
     }
 
