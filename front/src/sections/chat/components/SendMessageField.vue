@@ -41,6 +41,7 @@ export default {
 <style lang="scss">
     .send-message {
         display: flex;
+        height: 70px;
 
         .input-ui {
             padding: 0;

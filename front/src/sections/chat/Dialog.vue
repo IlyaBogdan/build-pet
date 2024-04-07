@@ -1,6 +1,6 @@
 
 <template>
-    <div class="dialog">
+    <div class="container dialog">
         <div class="dialog-messages">
             <div class="dialog-messages__content">
                 <div v-for="(message, index) in chat.messages" :key="message.id">
@@ -28,7 +28,7 @@ import DialogMessage from './components/DialogMessage.vue';
 import SendMessageField from './components/SendMessageField.vue';
 import Ava1 from '@/assets/billy-herrington.webp';
 import Ava2 from '@/assets/van.webp';
-
+import chatMixin from '@/mixins/chat';
 
 const user1 = { username: "Billy", id: '4527135', avatar: Ava1, typing: false };
 const user2 = { username: "Van", id: '4527135', avatar: Ava2, typing: false };
@@ -46,6 +46,7 @@ const Chat = {
 
 export default {
     components: { DialogMessage, SendMessageField },
+    mixins: [ chatMixin ],
     name: "chat-dialog",
     data() {
         return {
@@ -68,21 +69,34 @@ export default {
             });
         }
     },
+    mounted() {
+        const chatId = this.$route.params.id;
+        const userId = this.$route.params.user;
+
+        if (chatId) {
+            this.connection.call('getChat', { chatId });
+        } else if (userId) {
+            this.connection.call('createChat', { users: [this.user.id, userId] });
+        }
+    }
 
 }
 </script>
 <style lang="scss">
     .dialog {
-
-        padding: 15px;
-        border: 3px solid var(--gray-ui);
-        width: 800px;
-
+        position: relative;
         &-messages {
-
-            padding: 20px;
-
             &__content {
+                height: calc(var(--container-height) - 70px);
+                overflow-y: scroll;
+
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+                -ms-overflow-style: none;  /* IE and Edge */
+                scrollbar-width: none;  /* Firefox */
+
+
                 .dialog-message {
                     margin-bottom: 20px;
                     &.grouped {
@@ -93,7 +107,9 @@ export default {
         }
 
         .send-message {
-            margin: 20px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
         }
     }
 </style>

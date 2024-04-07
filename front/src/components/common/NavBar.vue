@@ -5,7 +5,7 @@
             <logo-full />
         </router-link>
         <router-link to="/users">Users</router-link>
-        <router-link to="/chat">Messanger</router-link>
+        <router-link to="/messanger">Messanger</router-link>
     </nav>
 </template>
 <script>
@@ -36,6 +36,7 @@ export default {
         overflow: hidden;
         position: relative;
         transition: .3s all;
+        height: 100vh;
 
         &.opened {
             width: 240px;

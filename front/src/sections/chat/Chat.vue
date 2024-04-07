@@ -1,12 +1,13 @@
 <template>
-    <div>
-        <div>
-            <div class="status" :data-online="online">{{ online ? 'Online' : 'Disconnected' }}</div>
-            <div v-if="!online && reconnect">Trying to reconnecting after {{ reconnect }} s</div>
+    <div v-if="user && user.chats.length">
+        <div v-for="(chat, index) in user.chats" :key="index">
+            <div>{{ chat.id }}</div>
         </div>
-        
-        <chat-list :users="userList"/>
-        <chat-dialog @sendMessage="sendMessage"/>
+    </div>
+    <div v-else>
+        <div>
+            You don't have any dialogs
+        </div>
     </div>
 </template>
 
@@ -18,35 +19,24 @@
  */
 
 
-import { ChatConnection } from "@/utils/connections/chat/ChatConnection";
-import ChatDialog from './Dialog.vue';
-import ChatList from './components/ChatList.vue';
+//import { ChatConnection } from "@/utils/connections/chat/ChatConnection";
+//import ChatDialog from './Dialog.vue';
+//import ChatList from './components/ChatList.vue';
+import chatMixin from '@/mixins/chat';
 
 export default {
-    components: { ChatDialog, ChatList },
-    name: "ChatElement",
+    components: {  },
+    mixins: [ chatMixin ],
+    name: "chat-element",
     data() {
         return {
             user: undefined,
             online: false,
-            userList: [],
-            reconnect: undefined,
             connection: undefined
         }
     },
     mounted() {
-        this.user = JSON.parse(localStorage.getItem('user'));
-
-        this.connection = new ChatConnection().intercept(this);
-
-        this.connection.onOpen(() => {
-            this.online = true;
-            this.connection.call('getUsers', { user: this.user });
-        })
-        .onClose(() => {
-            this.online = false;
-        })
-        
+        console.log('asasdawpiocoupvyibo2981693');
     },
     methods: {
         openChat(dst) {
@@ -54,13 +44,6 @@ export default {
 
             window.history.replaceState({}, '', url);
         },
-        sendMessage(message) {
-            // 1. Prepare message
-            // 2. call connection method 'sendMessage'
-
-            message.user = this.user;
-            this.connection.call('sendMessage', message);
-        }
     }
 }
 </script>

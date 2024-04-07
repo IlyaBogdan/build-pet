@@ -1,7 +1,7 @@
 <template lang="">
     <div class="logo">
         <img :src="logo"/>
-        <div class="title">CookSender</div>
+        <div class="title">CockSender</div>
     </div>
 </template>
 <script>
