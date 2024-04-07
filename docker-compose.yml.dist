@@ -1,1 +1,27 @@
+version: '3'
 
+services:
+
+  frontend:
+    container_name: frontend
+    build: ./front
+    volumes:
+      - ./front:/var/www/html
+    ports:
+      - "80:80"
+    networks:
+      - messanger
+
+  websocket:
+    container_name: websocket
+    build: ./broker
+    volumes:
+      - ./broker:/var/www/html
+    ports:
+      - "3000:3000"
+    networks:
+      - messanger
+
+networks:
+  messanger:
+    driver: bridge
