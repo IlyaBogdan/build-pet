@@ -59,6 +59,7 @@ export const api: BrokerApi = {
             let chat = broker.chatWithUsers(users);
             if (!chat) {
                 chat = new Chat(users);
+                broker.chats.push(chat);
             }
     
             return { method: 'activeChat', chat }
@@ -68,7 +69,7 @@ export const api: BrokerApi = {
         format: { method: 'getChat', chat: String },
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
 
-            const chat = broker.getChat(body.chat!.id);
+            const chat = broker.getChat(body.chat.id);
     
             return { method: 'activeChat', chat }
         }

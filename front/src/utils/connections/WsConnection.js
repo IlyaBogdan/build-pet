@@ -8,11 +8,16 @@ export const WsConnection = (() => {
         console.log('Send command:');
         console.log(command);
 
+        let timer;
+
         switch (connection.readyState) {
             case WebSocket.CONNECTING:
-                connection.onopen = () => {
-                    connection.send(command);
-                };
+                timer = setInterval(() => {
+                    if (connection.readyState == WebSocket.OPEN) {
+                        clearInterval(timer);
+                        connection.send(command);
+                    }
+                }, 1000);
                 break;
             case WebSocket.OPEN:
                 connection.send(command);

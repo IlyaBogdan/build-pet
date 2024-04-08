@@ -10,8 +10,6 @@ import UserPage from '@/sections/users/UserPage.vue';
 
 import NotFound from '@/sections/NotFoundPage.vue';
 
-console.log(Dialog);
-
 const routes = [
   
   { path: '/', component: Home, name: 'home' },

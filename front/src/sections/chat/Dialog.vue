@@ -59,7 +59,7 @@ export default {
 
         if (chatId) {
             console.log('getChat');
-            this.connection.call('getChat', { chatId });
+            this.connection.call('getChat', { chat: chatId });
         } else if (userId) {
             console.log('createChat');
             this.connection.call('createChat', { users: [this.user.id, userId] });

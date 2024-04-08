@@ -17,8 +17,6 @@ const WebSocketEntry = (() => {
 
                 server.on('connection', function (ws) {
 
-                    console.log(ws);
-
                     ws.send(JSON.stringify({ method: 'pull' }));
                 
                     ws.on('message', (message: RawData) => {

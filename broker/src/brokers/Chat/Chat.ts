@@ -43,8 +43,23 @@ export class ChatBroker extends Broker {
     }
 
     public chatWithUsers(users: Array<User>): Chat|boolean {
-        return this.chats.filter((chat) => {
-            chat.users == users;
-        })[0] ?? false;
+
+        let chatResult: Chat|boolean = false;
+
+        for (const chat of this.chats) {
+            let counter = 0;
+            for (const chatUser of chat.users) {
+                for (const checkUser of users) {
+                    if (chatUser.id == checkUser.id) counter++;
+                }
+            }
+
+            if (counter == chat.users.length && counter == users.length) {
+                chatResult = chat;
+                break;
+            }
+        }
+
+        return chatResult;
     }
 }
