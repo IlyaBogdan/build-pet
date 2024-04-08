@@ -7,7 +7,21 @@ export const WsConnection = (() => {
         const command = JSON.stringify(body);
         console.log('Send command:');
         console.log(command);
-        connection.send(command);
+
+        switch (connection.readyState) {
+            case WebSocket.CONNECTING:
+                connection.onopen = () => {
+                    connection.send(command);
+                };
+                break;
+            case WebSocket.OPEN:
+                connection.send(command);
+                break;
+            case WebSocket.CLOSING:
+            case WebSocket.CLOSED:
+                break;
+        }
+        
     }
 
     return class WsConnection {
@@ -50,7 +64,6 @@ export const WsConnection = (() => {
         }
 
         call(methodName, options={}) {
-            console.log(this._api);
             const methodParams = this.methods.filter((method) => method.method == methodName)[0];
             const data = Object.assign(methodParams, options);
 

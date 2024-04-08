@@ -11,4 +11,5 @@ export type ChatBrokerMessage = {
     dst?: UserIncomming;
     chat?: ChatIncomming;
     content?: String;
+    users?: Array<String>
 }

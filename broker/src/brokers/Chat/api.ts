@@ -51,22 +51,21 @@ export const api: BrokerApi = {
         }
     },
     createChat: {
-        format: { method: 'createChat', user: User, dst: User, content: {} },
+        format: { method: 'createChat', users: Array<User> },
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
+    
+            const users: Array<User> = body.users.map((userId) => broker.getUser(userId));
 
-            const user = broker.getUser(body.user!.id);
-            const dst = broker.getUser(body.dst!.id);
-    
-            const chat = new Chat([user, dst]);
-    
-            user.chats.push(chat);
-            dst.chats.push(chat);
+            let chat = broker.chatWithUsers(users);
+            if (!chat) {
+                chat = new Chat(users);
+            }
     
             return { method: 'activeChat', chat }
         }
     },
     getChat: {
-        format: { method: 'getChat', chat: Chat, user: User },
+        format: { method: 'getChat', chat: String },
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
 
             const chat = broker.getChat(body.chat!.id);

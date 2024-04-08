@@ -6,7 +6,6 @@ export class User {
     public id: String;
     public username: String;
     public active: Boolean = false;
-    public chats: Array<Chat> = [];
 
     constructor() {
         this.id = uuidv4();

@@ -41,4 +41,10 @@ export class ChatBroker extends Broker {
 
         return chat;
     }
+
+    public chatWithUsers(users: Array<User>): Chat|boolean {
+        return this.chats.filter((chat) => {
+            chat.users == users;
+        })[0] ?? false;
+    }
 }

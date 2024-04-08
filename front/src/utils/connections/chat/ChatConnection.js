@@ -9,7 +9,8 @@ export class ChatConnection extends WsConnection {
             { method: 'createUser' },
             { method: 'pull' },
             { method: 'getUsers' },
-            { method: 'getUsers' }
+            { method: 'createChat' },
+            { method: 'getChat' }
         ]
     }
 
