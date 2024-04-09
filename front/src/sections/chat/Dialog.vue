@@ -1,6 +1,12 @@
 
 <template>
-    <div class="container dialog">
+    <div class="container dialog" v-if="chat">
+        <div>
+            <div v-if="chat.users.length == 2" >
+                <div></div>
+                <div></div>
+            </div>
+        </div>
         <div class="dialog-messages">
             <div class="dialog-messages__content">
                 <div v-for="(message, index) in chat.messages" :key="message.id">
@@ -27,14 +33,15 @@
 import DialogMessage from './components/DialogMessage.vue';
 import SendMessageField from './components/SendMessageField.vue';
 import chatMixin from '@/mixins/chat';
+import imgMixin from '@/mixins/img';
 
 export default {
     components: { DialogMessage, SendMessageField },
-    mixins: [ chatMixin ],
+    mixins: [ chatMixin, imgMixin ],
     name: "chat-dialog",
     data() {
         return {
-            chat: {}
+            chat: undefined,
         }
     },
     methods: {

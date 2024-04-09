@@ -10,25 +10,20 @@
                 width="50"
                 height="50"
                 class="avatar"
-                :src="message.user?.avatar ?? loadImage"
+                :src="message.user?.avatar ?? avatar"
             />
         </div>
     </div>
 </template>
 <script>
-
-import noIcon from '@/assets/no-icon.png';
+import imgMixin from '@/mixins/img';
 
 export default {
     name: "dialog-message",
+    mixins: [ imgMixin ],
     props: {
         message: Object,
         next: Object
-    },
-    data() {
-        return {
-            loadImage: noIcon
-        }
     },
     methods: {
         messageDate(date) {
