@@ -72,6 +72,23 @@ export const api: BrokerApi = {
             return { method: 'activeChat', chat }
         }
     },
+    chatList: {
+        format: { method: 'getChats', user: User },
+        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
+            const chats = broker.chats.filter((chat) => {
+                let userInChat = false;
+                for (const user of chat.users) {
+                    if (user.id == body.user.id) {
+                        userInChat = true;
+                    }
+                }
+
+                return userInChat;
+            });
+    
+            return { method: 'userDialogs', chats }
+        }
+    },
     getUsers: {
         format: { method: 'getUsers' },
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {

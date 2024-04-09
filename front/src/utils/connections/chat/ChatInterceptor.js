@@ -28,6 +28,9 @@ export class ChatInterceptor extends WsMessageInterceptor {
                 });
 
                 self.$router.push(`/dialog?id=${self.chat.id}`);
+            },
+            userDialogs: (body) => {
+                self.dialogs = body.chats;
             }
         }
     }

@@ -1,7 +1,8 @@
 <template>
-    <div v-if="user && user.chats.length">
-        <div v-for="(chat, index) in user.chats" :key="index">
+    <div v-if="chats && chats.length">
+        <div v-for="(chat, index) in chats" :key="index">
             <div>{{ chat.id }}</div>
+            <router-link :to="`/dialog?id=${chat.id}`"></router-link>
         </div>
     </div>
     <div v-else>
@@ -18,10 +19,6 @@
  * 2) 
  */
 
-
-//import { ChatConnection } from "@/utils/connections/chat/ChatConnection";
-//import ChatDialog from './Dialog.vue';
-//import ChatList from './components/ChatList.vue';
 import chatMixin from '@/mixins/chat';
 
 export default {
@@ -30,9 +27,7 @@ export default {
     name: "chat-element",
     data() {
         return {
-            user: undefined,
-            online: false,
-            connection: undefined
+            chats: undefined
         }
     },
     mounted() {
