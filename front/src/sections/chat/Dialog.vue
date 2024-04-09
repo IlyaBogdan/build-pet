@@ -11,7 +11,7 @@
 
         <send-message-field 
             @sendMessage="send" 
-            @typing="(typing) => $emit('typing', typing)"
+            @typing="setTyping"
         />
     </div>
 </template>
@@ -40,17 +40,23 @@ export default {
     methods: {
         nextAuthor(index) {
             if (index + 1 != this.chat.messages.length) {
-                return this.chat.messages[index + 1].user;
+                return this.chat.messages[index + 1].author;
             }
 
             return undefined;
         },
         send(message) {
-            this.$emit('sendMessage', {
+
+            const messageFormated = {
                 date: new Date(),
                 content: message,
-                chat: this.chat
-            });
+                author: this.user
+            }
+
+            this.connection.call('sendMessage', { chat: this.chat, message: messageFormated });
+        },
+        setTyping() {
+
         }
     },
     mounted() {
@@ -59,7 +65,7 @@ export default {
 
         if (chatId) {
             console.log('getChat');
-            this.connection.call('getChat', { chat: chatId });
+            this.connection.call('getChat', { chat: { id: chatId } });
         } else if (userId) {
             console.log('createChat');
             this.connection.call('createChat', { users: [this.user.id, userId] });

@@ -1,3 +1,4 @@
+import { User } from "../../entities/User";
 
 type UserIncomming = {
     id: String;
@@ -11,5 +12,6 @@ export type ChatBrokerMessage = {
     dst?: UserIncomming;
     chat?: ChatIncomming;
     content?: String;
-    users?: Array<String>
+    users?: Array<String>,
+    message?: { date: Date, content: String, author: User }
 }

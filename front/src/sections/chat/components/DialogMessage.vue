@@ -6,23 +6,39 @@
             <div v-if="!nextUserIsEqual()" class="triangle"></div>
         </div>
         <div v-if="!nextUserIsEqual()" class="dialog-message__author">
-            <img width="50" height="50" class="avatar" :src="message.user.avatar" />
+            <img 
+                width="50"
+                height="50"
+                class="avatar"
+                :src="message.user?.avatar ?? loadImage"
+            />
         </div>
     </div>
 </template>
 <script>
+
+import noIcon from '@/assets/no-icon.png';
+
 export default {
     name: "dialog-message",
     props: {
         message: Object,
         next: Object
     },
+    data() {
+        return {
+            loadImage: noIcon
+        }
+    },
     methods: {
         messageDate(date) {
+            date = new Date(date);
             return `${date.getHours()}:${date.getMinutes()}`;
         },
         nextUserIsEqual() {
-            return this.next && this.next === this.message.user;
+            console.log(this.next?.id);
+            console.log(this.message.author.id);
+            return this.next && this.next.id === this.message.author.id;
         }
     }
 }

@@ -36,7 +36,7 @@ export default {
         }
     },
     mounted() {
-        console.log('asasdawpiocoupvyibo2981693');
+        this.connection.call('chatList', { user: this.user.id });
     },
     methods: {
         openChat(dst) {

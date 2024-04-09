@@ -13,13 +13,15 @@ export const api: BrokerApi = {
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
             let user: User;
 
-            if (body.user) 
+            if (body.user) {
                 try {
                     user = broker.getUser(body.user!.id);
                 } catch (e) {
                     user = broker.createUser();
                 }
-            else user = broker.createUser()
+            } else { 
+                user = broker.createUser();
+            }
 
             api.setOnline.action(user, broker);
 
@@ -30,30 +32,27 @@ export const api: BrokerApi = {
     setTyping: {
         format: { method: 'setTyping', user: User, chat: Chat, typing: Boolean },
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
-    
             const user = broker.getUser(body.user!.id);
             const chat = broker.getChat(body.chat!.id);
             
-    
             return chat;
         }
     },
     sendMessage: {
-        format: { method: 'sendMessage', user: User, chat: Chat, content: {} },
+        format: { method: 'sendMessage', message: {} },
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
-    
-            const user = broker.getUser(body.user!.id);
             const chat = broker.getChat(body.chat!.id);
+            body.message.author = broker.getUser(body.message.author.id);
             
-            chat.messages.push(new Message(user, body.content!));
+            chat.messages.push(new Message(body.message));
+            broadCast.emit('broadcast', { method: 'activeChat', chat });
     
-            return chat;
+            return { method: 'activeChat', chat };
         }
     },
     createChat: {
         format: { method: 'createChat', users: Array<User> },
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
-    
             const users: Array<User> = body.users.map((userId) => broker.getUser(userId));
 
             let chat = broker.chatWithUsers(users);
@@ -68,7 +67,6 @@ export const api: BrokerApi = {
     getChat: {
         format: { method: 'getChat', chat: String },
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
-
             const chat = broker.getChat(body.chat.id);
     
             return { method: 'activeChat', chat }

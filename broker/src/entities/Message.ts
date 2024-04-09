@@ -3,11 +3,11 @@ import { User } from "./User";
 export class Message {
 
     public author: User;
-    public message: String;
+    public content: String;
     public date: Date = new Date();
 
-    constructor(author: User, content: String) {
-        this.author = author;
-        this.message = content;
+    constructor(options: { author: User, content: String }) {
+        this.author = options.author;
+        this.content = options.content;
     }
 }
