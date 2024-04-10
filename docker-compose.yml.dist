@@ -32,7 +32,6 @@ services:
 
   frontend:
     container_name: frontend
-    command: npm run serve
     env_file: ./.env
     build: ./front
     volumes:
@@ -42,11 +41,10 @@ services:
 
   websocket:
     container_name: websocket
-    command: npm run start:dev
     env_file: ./.env
     build: ./broker
-    volumes:
-      - './broker:/var/www/html'
+    #volumes:
+    #  - './broker:/var/www/html'
     networks:
       - messanger
     depends_on:
