@@ -1,11 +1,9 @@
-FROM node:lts-alpine
+FROM node:19-alpine
 
 WORKDIR /var/www/html
 
-COPY package*.json ./
-RUN npm i
-RUN npm i ts-node-dev --save-dev
 COPY . .
+RUN npm i 
+RUN npm i ts-node-dev --save-dev
 
 EXPOSE 3000
-CMD [ "npm", "run", "start:dev" ]
