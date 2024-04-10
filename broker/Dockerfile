@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:21-alpine
 
 WORKDIR /var/www/html
 
@@ -9,6 +9,5 @@ COPY . .
 RUN npm i 
 RUN npm i ts-node-dev --save-dev
 
-EXPOSE 3000
 CMD ["npm", "run", "start:dev"]
 

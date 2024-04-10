@@ -1,4 +1,4 @@
-FROM node:lts-alpine
+FROM node:21-alpine
 
 #RUN npm install -g http-server
 
@@ -9,9 +9,6 @@ RUN npm install
 RUN npm i -g @vue/cli
 
 COPY . .
-RUN npm run build
-
-EXPOSE 8080
 
 #CMD [ "http-server", "dist" ]
 CMD ["npm", "run", "serve"]
