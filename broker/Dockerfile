@@ -5,9 +5,8 @@ WORKDIR /var/www/html
 RUN apk update
 RUN apk upgrade 
 
-COPY . .
+COPY package*.json .
+
 RUN npm i 
-RUN npm i ts-node-dev --save-dev
 
-CMD ["npm", "run", "start:dev"]
-
+COPY . .
