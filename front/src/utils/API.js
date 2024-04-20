@@ -8,7 +8,10 @@ const request = async (url, params, method) => {
 
         },
         credentials: "include"
-    }).then(response => response.json());
+    }).then(async (response) => { 
+        if (response.ok) return response.json();
+        else throw await response.json();
+    });
 }
 
 export const API = {

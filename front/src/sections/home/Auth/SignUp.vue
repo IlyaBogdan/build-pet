@@ -45,13 +45,16 @@ export default {
             if (!this.errors.length) {
                 this.loading = true;
                 API.signUp(this.email, this.password)
-                .then((response) => {
-                    // redirect
-                    console.log(response);
-                })
-                .finally(() => {
-                    this.loading = false;
-                });
+                    .then((response) => {
+                        
+                        console.log(response);
+                    })
+                    .catch((errors) => {
+                        this.errors = errors;
+                    })
+                    .finally(() => {
+                        this.loading = false;
+                    });
             }
         },
         validate() {

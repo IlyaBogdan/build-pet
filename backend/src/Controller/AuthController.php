@@ -7,11 +7,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
 use function Symfony\Component\Clock\now;
 
-class AuthController
+class AuthController extends AbstractController
 {
     private function hashPassword(string $rawPassword): string
     {
@@ -33,6 +34,8 @@ class AuthController
     #[Route('/api/auth/sign-up', methods: ['POST'])]
     public function signUp(Request $request, ManagerRegistry $doctrine): JsonResponse
     {
+        return new JsonResponse(['this user already exists'], 403);
+
         $entityManager = $doctrine->getManager();
 
         $email = $request->request->get('email');

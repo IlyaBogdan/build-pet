@@ -17,19 +17,15 @@ export const Validator = {
     payloadValidation(fields) {
         const errors = [];
         for (const [field, value] of Object.entries(fields)) {
-            console.log(field, value);
             if (!value) {
                 errors.push(`Field ${field} is required`);
                 continue;
             }
-            if (!this[field](value)) {
+            if (field in this && !this[field](value)) {
                 errors.push(this.messages[field]);
                 continue;
             }
         }
-
-        console.log(errors);
-
         return errors.length ? errors : true;
     }
 }
