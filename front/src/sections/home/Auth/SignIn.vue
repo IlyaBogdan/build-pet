@@ -1,13 +1,14 @@
 <template>
     <div class="sign-in">
+        <pre-loader v-if="loading"/>
         <div class="title">Sign In</div>
         <form class="sign-in__form">
-            <input-ui label="Email" v-model="email"/>
-            <input-ui label="Password" type="password" v-model="password"/>
+            <input-ui label="Email" v-model:value="email"/>
+            <input-ui label="Password" type="password" v-model:value="password"/>
 
             <errors-list :errors="errors"/>
 
-            <button-ui type="primary" @click="loginHandle" >Sign In</button-ui>
+            <button-ui type="primary" @click="loginHandle">Sign In</button-ui>
         </form>
         <div class="sign-in__footer">
             <div>Don't have an account?</div>
@@ -19,22 +20,37 @@
 </template>
 <script>
 import { API } from '@/utils/API.js';
+import { Validator } from '@/utils/Validator.js';
 
 export default {
     data() {
         return {
             email: undefined,
             password: undefined,
-            errors: []
+            errors: [],
+            loading: false
         }
     },
     methods: {
         loginHandle() {
-            API.login(this.login, this.password)
-                .then((response) => {
-                    // redirect
-                    console.log(response);
-                });
+            this.validate();
+
+            if (!this.errors.length) {
+                this.loading = true;
+                API.login(this.login, this.password)
+                    .then((response) => {
+                        // redirect
+                        console.log(response);
+                    })
+                    .finally(() => {
+                        this.loading = false;
+                    });
+            }
+        },
+        validate() {
+            this.errors = [];
+            const validationResult = Validator.payloadValidation({ email: this.email, password: this.password });
+            if (Array.isArray(validationResult)) this.errors = this.errors.concat(validationResult);
         }
     }
 }
@@ -59,6 +75,10 @@ export default {
             margin: 0 0 20px;
             display: flex;
             flex-direction: column;
+
+            .errors {
+                text-align: center;
+            }
 
             button {
                 margin: 20px auto 0;

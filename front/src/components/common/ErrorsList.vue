@@ -24,6 +24,7 @@ export default {
         flex-direction: column;
 
         .error {
+            margin-top: 10px;
             color: var(--red-ui);
         }
     }

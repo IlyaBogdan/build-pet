@@ -1,12 +1,13 @@
 <template>
     <div class="sign-up">
+        <pre-loader v-if="loading"/>
         <div class="title">Sign Up</div>
         <form class="sign-up__form">
-            <input-ui label="Email" :required="true" type="email" v-model="email"/>
-            <input-ui label="Password" :required="true" type="password" v-model="password"/>
-            <input-ui label="Password repeat" :required="true" type="password" v-model="passowrdRepeat"/>
-            <input-ui label="First Name" :required="true" v-model="firstName"/>
-            <input-ui label="Last Name" v-model="lastName"/>
+            <input-ui label="Email" :required="true" type="email" v-model:value="email"/>
+            <input-ui label="Password" :required="true" type="password" v-model:value="password"/>
+            <input-ui label="Password repeat" :required="true" type="password" v-model:value="passwordRepeat"/>
+            <input-ui label="First Name" :required="true" v-model:value="firstName"/>
+            <input-ui label="Last Name" v-model:value="lastName"/>
 
             <errors-list :errors="errors"/>
 
@@ -22,26 +23,41 @@
 </template>
 <script>
 import { API } from '@/utils/API.js';
+import { Validator } from '@/utils/Validator.js';
 
 export default {
     data() {
         return {
             email: undefined,
             password: undefined,
-            passowrdRepeat: undefined,
+            passwordRepeat: undefined,
             firstName: undefined,
             lastName: undefined,
             passwordsEquals: false,
-            errors: []
+            errors: [],
+            loading: false,
         }
     },
     methods: {
         signUp() {
-            API.signUp(this.email, this.password)
+            this.validate();
+
+            if (!this.errors.length) {
+                this.loading = true;
+                API.signUp(this.email, this.password)
                 .then((response) => {
                     // redirect
                     console.log(response);
+                })
+                .finally(() => {
+                    this.loading = false;
                 });
+            }
+        },
+        validate() {
+            this.errors = [];
+            const validationResult = Validator.payloadValidation({ email: this.email, password: this.password, 'First name': this.firstName });
+            if (Array.isArray(validationResult)) this.errors = this.errors.concat(validationResult);
         }
     }
 }
@@ -66,6 +82,10 @@ export default {
             margin: 0 0 20px;
             display: flex;
             flex-direction: column;
+
+            .errors {
+                text-align: center;
+            }
 
             button {
                 margin: 20px auto 0;

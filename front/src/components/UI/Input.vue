@@ -4,7 +4,7 @@
         <input 
             :name="name" 
             :type="type" 
-            :value="value"
+            v-model="writableValue"
         />
     </div>
 </template>
@@ -21,14 +21,25 @@ export default {
             type: String,
             default: undefined
         },
-        value: {
-            default: undefined
-        },
         required: {
             type: Boolean,
             default: false
+        },
+        value: {
+            default: undefined,
         }
-    }
+    },
+    emits: ['update:value'],
+    computed: {
+        writableValue: {
+            get() {
+                return this.value;
+            },
+            set(newValue) {
+                this.$emit('update:value', newValue);
+            }
+        }
+    },
 }
 </script>
 <style lang="scss">
