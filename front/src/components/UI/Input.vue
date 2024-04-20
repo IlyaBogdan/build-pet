@@ -1,9 +1,9 @@
 <template lang="">
     <div class="input-ui">
-        <label v-if="label" :for="name">{{ label }}</label>
+        <label v-if="label" :class="{'required': required}" :for="name">{{ label }}</label>
         <input 
             :name="name" 
-            :type="inputType" 
+            :type="type" 
             :value="value"
         />
     </div>
@@ -13,7 +13,7 @@ export default {
     name: "input-ui",
     props: {
         name: String,
-        inputType: {
+        type: {
             type: String,
             default: 'text'
         },
@@ -23,6 +23,10 @@ export default {
         },
         value: {
             default: undefined
+        },
+        required: {
+            type: Boolean,
+            default: false
         }
     }
 }
@@ -35,6 +39,12 @@ export default {
 
         label {
             margin-bottom: 10px;
+
+            &.required::after {
+                content: '*';
+                color: var(--red-ui);
+                margin-left: 3px;
+            }
         }
 
         input {

@@ -1,13 +1,23 @@
 <?php
-// src/Controller/DefaultController.php
+
 namespace App\Controller;
 
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
+
+use function Symfony\Component\Clock\now;
 
 class AuthController
 {
+    private function hashPassword(string $rawPassword): string
+    {
+        return hash('md5', $rawPassword);
+    }
+
     #[Route('/api/auth/login', methods: ['POST'])]
     public function login()
     {
@@ -21,9 +31,25 @@ class AuthController
     }
 
     #[Route('/api/auth/sign-up', methods: ['POST'])]
-    public function signUp()
+    public function signUp(Request $request, ManagerRegistry $doctrine): JsonResponse
     {
-        
+        $entityManager = $doctrine->getManager();
+
+        $email = $request->request->get('email');
+        $password = $request->request->get('password');
+        $firstName = $request->request->get('first_name');
+        $lastName = $request->request->get('last_name');
+
+        $user = new User();
+        $user->setEmail($email);
+        $user->setPassword($this->hashPassword($password));
+        $user->setCreatedAt(now());
+        $user->setFirstName($firstName);
+        $user->setLastName($lastName);
+
+        $entityManager->persist($user);
+        $entityManager->flush();
+
         return new JsonResponse(["Hello"]);
     }
 }

@@ -13,15 +13,15 @@ const request = async (url, params, method) => {
 
 export const API = {
     
-    async login(login, password) {
-        return await request('/auth/login', { login, password }, 'POST');
+    login(email, password) {
+        return request('/auth/login', { email, password }, 'POST');
     },
 
-    async signUp(login, password) {
-        return await request('/auth/sign-up', { login, password }, 'POST');
+    signUp(email, password) {
+        return request('/auth/sign-up', { email, password }, 'POST');
     },
 
-    async logout() {
+    logout() {
 
     }
 }
