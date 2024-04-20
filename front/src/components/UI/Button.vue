@@ -1,5 +1,5 @@
 <template lang="">
-    <button :data-type="type">
+    <button :data-type="type" type="button">
         <slot></slot>
     </button>
 </template>
