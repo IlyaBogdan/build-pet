@@ -39,15 +39,21 @@ export default {
         }
     },
     methods: {
-        signUp() {
-            this.validate();
+        async signUp() {
+            //const data = this.validate();
 
+            const data = {
+                email: 'someemail@gmail.com',
+                password: 'qwerty123',
+                first_name: 'User',
+                last_name: 'Test'
+            }
             if (!this.errors.length) {
                 this.loading = true;
-                API.signUp(this.email, this.password)
-                    .then((response) => {
-                        
-                        console.log(response);
+                API.signUp(data)
+                    .then(() => {
+                        this.$store.setAutenticated(true);
+                        window.location.href = '/personal';
                     })
                     .catch((errors) => {
                         this.errors = errors;
@@ -59,8 +65,17 @@ export default {
         },
         validate() {
             this.errors = [];
-            const validationResult = Validator.payloadValidation({ email: this.email, password: this.password, 'First name': this.firstName });
+            let data = { 
+                email: this.email,
+                password: this.password,
+                first_name: this.firstName
+            };
+            const validationResult = Validator.payloadValidation(data);
             if (Array.isArray(validationResult)) this.errors = this.errors.concat(validationResult);
+            if (this.password != this.passwordRepeat) this.errors.push('Passwords not equals');
+
+            data.last_name = this.lastName;
+            return data;
         }
     }
 }

@@ -2,57 +2,41 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use Symfony\Component\HttpFoundation\Response;
+use App\Services\AuthService;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-
-use function Symfony\Component\Clock\now;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 class AuthController extends AbstractController
 {
-    private function hashPassword(string $rawPassword): string
-    {
-        return hash('md5', $rawPassword);
+    private AuthService $authService;
+
+    public function __construct(AuthService $authSerivce) {
+        $this->authService = $authSerivce;
     }
 
     #[Route('/api/auth/login', methods: ['POST'])]
-    public function login()
+    public function login(Request $request)
     {
-        return new Response("Hello");
+        $token = $this->authService->login($request);
+        if ($token) return new JsonResponse(['authenticated' => $token]);
+        else throw new BadCredentialsException();
     }
 
     #[Route('/api/auth/logout', methods: ['POST'])]
-    public function logout()
+    public function logout(Request $request)
     {
-        return new Response("Hello");
+        $this->authService->logout($request);
+        return new JsonResponse(['message' => 'success']);
     }
 
     #[Route('/api/auth/sign-up', methods: ['POST'])]
-    public function signUp(Request $request, ManagerRegistry $doctrine): JsonResponse
+    public function signUp(Request $request): JsonResponse
     {
-        return new JsonResponse(['this user already exists'], 403);
-
-        $entityManager = $doctrine->getManager();
-
-        $email = $request->request->get('email');
-        $password = $request->request->get('password');
-        $firstName = $request->request->get('first_name');
-        $lastName = $request->request->get('last_name');
-
-        $user = new User();
-        $user->setEmail($email);
-        $user->setPassword($this->hashPassword($password));
-        $user->setCreatedAt(now());
-        $user->setFirstName($firstName);
-        $user->setLastName($lastName);
-
-        $entityManager->persist($user);
-        $entityManager->flush();
-
-        return new JsonResponse(["Hello"]);
+        $user = $this->authService->signUp($request);
+        $token = $this->authService->authorize($request, $user);
+        return new JsonResponse(['authenticated' => $token->getToken()]);
     }
 }

@@ -33,24 +33,27 @@ export default {
     },
     methods: {
         loginHandle() {
-            this.validate();
+            const data = this.validate();
 
             if (!this.errors.length) {
                 this.loading = true;
-                API.login(this.login, this.password)
-                    .then((response) => {
-                        // redirect
-                        console.log(response);
+                API.login(data)
+                    .then(() => {
+                        this.$store.setAutenticated(true);
+                        //window.location.href = '/personal';
                     })
-                    .finally(() => {
+                    .catch(() => {
                         this.loading = false;
                     });
             }
         },
         validate() {
+            const data = { email: this.email, password: this.password };
             this.errors = [];
-            const validationResult = Validator.payloadValidation({ email: this.email, password: this.password });
+            const validationResult = Validator.payloadValidation(data);
             if (Array.isArray(validationResult)) this.errors = this.errors.concat(validationResult);
+
+            return data;
         }
     }
 }
