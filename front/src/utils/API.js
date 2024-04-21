@@ -4,7 +4,7 @@ const request = async (url, params, method) => {
     return fetch(`${BACKEND_URL}${url}`, {
         body: JSON.stringify(params),
         method,
-        mode: "cors",
+        mode: "no-cors",
         credentials: "include"
     }).then(async (response) => { 
         if (response.ok) return response.json();

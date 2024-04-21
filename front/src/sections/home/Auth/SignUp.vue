@@ -52,7 +52,6 @@ export default {
                 this.loading = true;
                 API.signUp(data)
                     .then(() => {
-                        this.$store.setAutenticated(true);
                         window.location.href = '/personal';
                     })
                     .catch((errors) => {

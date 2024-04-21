@@ -39,8 +39,7 @@ export default {
                 this.loading = true;
                 API.login(data)
                     .then(() => {
-                        this.$store.setAutenticated(true);
-                        //window.location.href = '/personal';
+                        window.location.href = '/personal';
                     })
                     .catch(() => {
                         this.loading = false;

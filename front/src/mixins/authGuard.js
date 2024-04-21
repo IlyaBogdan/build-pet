@@ -1,5 +1,5 @@
 export default {
     mounted() {
-        if (!this.$store.state.authenticated) window.location.href = '/sign-in'
+        if (!this.$store.state.authModule.authenticated) window.location.href = '/sign-in';
     },
 }
