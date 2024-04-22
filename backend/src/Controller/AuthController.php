@@ -21,7 +21,7 @@ class AuthController extends AbstractController
     public function login(Request $request)
     {
         $token = $this->authService->login($request);
-        if ($token) return new JsonResponse(['authenticated' => $token]);
+        if ($token) return new JsonResponse(['authenticated' => $token->getToken()]);
         else throw new BadCredentialsException();
     }
 

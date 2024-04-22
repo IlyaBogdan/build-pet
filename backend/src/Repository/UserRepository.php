@@ -20,14 +20,4 @@ class UserRepository extends ServiceEntityRepository
     {
         return $this->apiTokenRepository->findOneBy(['token' => $apiToken])?->getUser();
     }
-
-    //    public function findOneBySomeField($value): ?User
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
 }

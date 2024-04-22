@@ -23,5 +23,8 @@
 <style>
   #app {
     display: flex;
+    .content {
+      width: 100%;
+    }
   }
 </style>

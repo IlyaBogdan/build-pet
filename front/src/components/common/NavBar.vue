@@ -1,5 +1,5 @@
 <template lang="">
-    <nav class="sidebar" :class="{ 'opened': opened }">
+    <nav v-if="$store.state.authModule.authenticated" class="sidebar" :class="{ 'opened': opened }">
         <close-btn @click="close"/>
         <router-link class="logo" to="/">
             <logo-full />

@@ -37,7 +37,7 @@ export default {
 
             if (!this.errors.length) {
                 this.loading = true;
-                API.login(data)
+                API.login(data.email, data.password)
                     .then(() => {
                         window.location.href = '/personal';
                     })

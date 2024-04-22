@@ -1,13 +1,97 @@
 <template lang="">
-    <header>
-
+    <header :class="{'authenticated': $store.state.authModule.authenticated }">
+        <div class="content guest__content" v-if="!$store.state.authModule.authenticated">
+            <nav class="guest__content-nav">
+                <router-link to="/personal">About</router-link>
+                <router-link to="/personal">About</router-link>
+                <router-link to="/personal">About</router-link>
+                <router-link to="/personal">About</router-link>
+            </nav>
+            <div class="auth_status guest__content-auth">
+                <button-ui id="sign-in_btn" type="success" @click="changeLoc('/sign-in')">Sign In</button-ui>
+                <button-ui id="sign-up_btn" type="primary" @click="changeLoc('/sign-up')">Sign Up</button-ui>
+            </div>
+        </div>
+        <div class="content authenticated__content" v-if="$store.state.authModule.authenticated">
+            <nav class="authenticated__content-nav">
+                <router-link to="/personal">About</router-link>
+                <router-link to="/personal">About</router-link>
+                <router-link to="/personal">About</router-link>
+                <router-link to="/personal">About</router-link>
+            </nav>
+            <div class="auth_status authenticated__content-profile">
+                <avatar-icon />
+                <button-ui type="primary" @click="logout">Logout</button-ui>
+            </div>
+        </div>
     </header>
 </template>
 <script>
+import { API } from '@/utils/API';
+
 export default {
-    name: "HeaderElement"
+    name: "HeaderElement",
+    methods: {
+        logout() {
+            API.logout()
+                .then(() => {
+                    window.location.href = "/";
+                });
+        },
+        changeLoc(loc) {
+            window.location.href = loc;
+        }
+    },
 }
+
 </script>
-<style lang="scss">
-    
+<style lang="scss" scoped>
+    header {
+        .content {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 15px 0;
+
+            nav {
+                display: flex;
+                align-items: center;
+                a {
+                    margin-left: 15px;
+                    &:last-child {
+                        margin-right: 15px;
+                    }
+                }
+            }
+            .auth_status {
+                display: flex;
+                align-items: center;
+                min-width: 200px;
+                justify-content: space-around;
+            }
+        }
+
+
+        .guest__content {
+            &-auth {
+                
+            }
+        }
+
+        &.authenticated {
+            .authenticated__content {
+
+                background-color: var(--lavanda-ui);
+                &-nav {
+                    a {
+                        color: white;
+                    }
+                }
+
+                &-profile {
+
+                }
+            }
+        }
+    }
 </style>

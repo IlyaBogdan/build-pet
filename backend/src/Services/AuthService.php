@@ -28,8 +28,6 @@ class AuthService
     public function login(Request $request): ?ApiToken
     {
         $parameters = json_decode($request->getContent(), true);
-
-        dd($parameters);
         $email = $parameters['email'];
         $password = $this->hashPassword($parameters['password']);
         $user = $this->userRepository->findOneBy(['email' => $email, 'password' => $password]);

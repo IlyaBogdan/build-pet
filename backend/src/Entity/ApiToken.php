@@ -18,9 +18,10 @@ class ApiToken
     #[ORM\Column(length: 255)]
     private ?string $token = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'apiTokens')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
+    
 
     public function getId(): ?int
     {
@@ -44,7 +45,7 @@ class ApiToken
         return $this->user;
     }
 
-    public function setUser(User $user): static
+    public function setUser(?User $user): static
     {
         $this->user = $user;
 
