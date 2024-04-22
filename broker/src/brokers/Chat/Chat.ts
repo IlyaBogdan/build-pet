@@ -4,6 +4,7 @@ import { Broker } from '../../abstracts/Broker/Broker';
 import { api } from './api';
 import { BrokerApi } from '../../abstracts/Broker/BrokerApi';
 import { BackendAPI } from '../../utils/API';
+import { UserDto } from '../dto/user.dto';
 
 export class ChatBroker extends Broker {
 
@@ -20,23 +21,23 @@ export class ChatBroker extends Broker {
         return api;
     }
 
-    public createUser(): User {
+    public createUser(userInfo: UserDto): User {
 
-        const user = new User();
+        const user = new User(userInfo);
         this.users.push(user);
         user.active = true;
 
         return user;
     }
 
-    public getUser(id: String): User {
+    public getUser(id: number): User {
         const user = this.users.filter((user) => user.id == id)[0];
         if (!user) throw new Error(`User not found`);
 
         return user;
     }
 
-    public getChat(id: String): Chat {
+    public getChat(id: number): Chat {
         const chat = this.chats.filter((chat) => chat.id == id)[0];
         if (!chat) throw new Error(`Chat not found`);
 

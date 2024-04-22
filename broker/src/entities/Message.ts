@@ -1,13 +1,17 @@
+import { MessageDto } from "../brokers/dto/message.dto";
 import { User } from "./User";
 
 export class Message {
 
-    public author: User;
-    public content: String;
-    public date: Date = new Date();
+    public user: User;
+    public message: String;
+    public created_at: Date;
+    public updated_at: Date;
 
-    constructor(options: { author: User, content: String }) {
-        this.author = options.author;
-        this.content = options.content;
+    constructor(messageInfo: MessageDto) {
+        this.user = messageInfo.user;
+        this.message = messageInfo.message;
+        this.created_at = messageInfo.created_at ?? new Date();
+        this.updated_at = messageInfo.updated_at ?? new Date();
     }
 }

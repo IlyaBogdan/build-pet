@@ -1,20 +1,20 @@
-import { v4 as uuidv4 } from 'uuid';
-import { Chat } from './Chat';
+import { UserDto } from "../brokers/dto/user.dto";
 
 export class User {
 
-    public id: String;
-    public username: String;
+    public id: number;
+    public first_name: String;
+    public last_name: String;
+    public email: String;
+    public created_at: Date;
+
     public active: Boolean = false;
 
-    constructor() {
-        this.id = uuidv4();
-        this.username = `Username #${this.id}`;
-    }
-
-    setUsername(username: String): this {
-        this.username = username;
-
-        return this;
+    constructor(userInfo: UserDto) {
+        this.id = userInfo.id;
+        this.first_name = userInfo.first_name;
+        this.last_name = userInfo.last_name;
+        this.email = userInfo.email;
+        this.created_at = userInfo.created_at;
     }
 }

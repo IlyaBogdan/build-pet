@@ -6,6 +6,7 @@ import { User } from "../../entities/User";
 import { ChatBroker } from "./Chat";
 import { ChatBrokerMessage } from "./message.type";
 import { BackendAPI } from "../../utils/API";
+import { UserDto } from "../dto/user.dto";
 
 export const api: BrokerApi = {
     
@@ -13,19 +14,12 @@ export const api: BrokerApi = {
         format: { method: 'pull', user: User },
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
             let user: User;
-
-            if (body.user) {
-                try {
-                    user = broker.getUser(body.user!.id);
-                } catch (e) {
-                    user = broker.createUser();
-                }
-            } else { 
-                user = broker.createUser();
+            try {
+                user = broker.getUser(body.user!.id);
+            } catch (e) {
+                user = broker.createUser(body.user! as UserDto);
             }
-
             api.setOnline.action(user, broker);
-
             return { method: 'setUser', user };
         }
     },
@@ -43,7 +37,7 @@ export const api: BrokerApi = {
         format: { method: 'sendMessage', message: {} },
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
             const chat = broker.getChat(body.chat!.id);
-            body.message.author = broker.getUser(body.message.author.id);
+            body.message.user = broker.getUser(body.message.user.id);
             
             chat.messages.push(new Message(body.message));
             broadCast.emit('broadcast', { method: 'activeChat', chat });
@@ -58,7 +52,7 @@ export const api: BrokerApi = {
 
             let chat = broker.chatWithUsers(users);
             if (!chat) {
-                chat = new Chat(users);
+                chat = new Chat();
                 broker.chats.push(chat);
             }
     

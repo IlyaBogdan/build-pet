@@ -1,17 +1,19 @@
 import { User } from "../../entities/User";
+import { MessageDto } from "../dto/message.dto";
+import { UserDto } from "../dto/user.dto";
 
 type UserIncomming = {
-    id: String;
+    id: number;
 }
 type ChatIncomming = {
-    id: String;
+    id: number;
 }
 
 export type ChatBrokerMessage = {
-    user?: UserIncomming;
+    user?: UserIncomming | UserDto;
     dst?: UserIncomming;
     chat?: ChatIncomming;
     content?: String;
-    users?: Array<String>,
-    message?: { date: Date, content: String, author: User }
+    users?: Array<number>,
+    message?: MessageDto
 }

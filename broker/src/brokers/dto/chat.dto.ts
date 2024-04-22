@@ -13,6 +13,6 @@ export type ChatDto = {
     type: ChatTypes,
     users: Array<User>,
     messages?: Array<Message>,
-    created_at: Date,
+    created_at?: Date,
     updated_at?: Date
 }
