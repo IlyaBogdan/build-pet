@@ -18,7 +18,6 @@ const request = async (url, params, method) => {
         if (response.ok) return response.json();
         else {
             if (response.status == 401) {
-                console.log('here');
                 localStorage.removeItem('apiToken');
                 window.location.href = '/sign-in';
             }
@@ -35,11 +34,16 @@ export const API = {
      * @param {string} password
      */
     login(email, password) {
-        return request('/auth/login', { email, password }, 'POST')
-            .then((response) => {
-                if (response.authenticated) localStorage.setItem('apiToken', response.authenticated);
-                else throw [response.error];
-            });
+        return new Promise((resolve, reject) => {
+            request('/auth/login', { email, password }, 'POST')
+                .then((response) => {
+                    if (response.authenticated) {
+                        localStorage.setItem('apiToken', response.authenticated);
+                        resolve();
+                    } else reject(response.errors)
+                });
+        });
+        
     },
 
     /**
@@ -47,11 +51,15 @@ export const API = {
      * @param { {email: string, password: string, first_name: string, last_name?: string } } data 
      */
     signUp(data) {
-        return request('/auth/sign-up', data, 'POST')
-            .then((response) => {
-                if (response.authenticated) localStorage.setItem('apiToken', response.authenticated);
-                else throw [response.error];
-            });
+        return new Promise((resolve, reject) => {
+            request('/auth/sign-up', data, 'POST')
+                .then((response) => {
+                    if (response.authenticated) {
+                        localStorage.setItem('apiToken', response.authenticated);
+                        resolve();
+                    } else reject(response.errors)
+                });
+        });
     },
 
     /**

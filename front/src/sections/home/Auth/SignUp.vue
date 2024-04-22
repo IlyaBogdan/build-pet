@@ -3,15 +3,40 @@
         <pre-loader v-if="loading"/>
         <div class="title">Sign Up</div>
         <form class="sign-up__form">
-            <input-ui label="Email" :required="true" type="email" v-model:value="email"/>
-            <input-ui label="Password" :required="true" type="password" v-model:value="password"/>
-            <input-ui label="Password repeat" :required="true" type="password" v-model:value="passwordRepeat"/>
-            <input-ui label="First Name" :required="true" v-model:value="firstName"/>
-            <input-ui label="Last Name" v-model:value="lastName"/>
-
+            <input-ui
+                label="Email"
+                @keyup.enter="signUp"
+                :required="true"
+                type="email"
+                v-model:value="email"
+            />
+            <input-ui 
+                label="Password"
+                @keyup.enter="signUp"
+                :required="true"
+                type="password"
+                v-model:value="password"
+            />
+            <input-ui 
+                label="Password repeat"
+                @keyup.enter="signUp"
+                :required="true"
+                type="password"
+                v-model:value="passwordRepeat"
+            />
+            <input-ui
+                label="First Name"
+                @keyup.enter="signUp"
+                :required="true"
+                v-model:value="firstName"
+            />
+            <input-ui
+                label="Last Name"
+                @keyup.enter="signUp"
+                v-model:value="lastName"
+            />
             <errors-list :errors="errors"/>
-
-            <button-ui type="primary" @click="signUp">Register</button-ui>
+            <button-ui type="primary" @keyup.enter="signUp" @click="signUp">Register</button-ui>
         </form>
         <div class="sign-up__footer">
             <div>Do you have an account?</div>
@@ -40,21 +65,14 @@ export default {
     },
     methods: {
         async signUp() {
-            //const data = this.validate();
+            const data = this.validate();
 
-            const data = {
-                email: 'someemail@gmail.com',
-                password: 'qwerty123',
-                first_name: 'User',
-                last_name: 'Test'
-            }
             if (!this.errors.length) {
                 this.loading = true;
                 API.signUp(data)
                     .then(() => {
                         window.location.href = '/personal';
-                    })
-                    .catch((errors) => {
+                    }, (errors) => {
                         this.errors = errors;
                     })
                     .finally(() => {

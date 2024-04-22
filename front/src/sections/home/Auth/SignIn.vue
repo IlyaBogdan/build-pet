@@ -3,12 +3,19 @@
         <pre-loader v-if="loading"/>
         <div class="title">Sign In</div>
         <form class="sign-in__form">
-            <input-ui label="Email" v-model:value="email"/>
-            <input-ui label="Password" type="password" v-model:value="password"/>
-
+            <input-ui
+                label="Email"
+                v-model:value="email"
+                @keyup.enter="loginHandle"
+            />
+            <input-ui
+                label="Password"
+                type="password"
+                v-model:value="password"
+                @keyup.enter="loginHandle"
+            />
             <errors-list :errors="errors"/>
-
-            <button-ui type="primary" @click="loginHandle">Sign In</button-ui>
+            <button-ui type="primary" @keyup.enter="loginHandle" @click="loginHandle">Sign In</button-ui>
         </form>
         <div class="sign-in__footer">
             <div>Don't have an account?</div>
@@ -40,8 +47,10 @@ export default {
                 API.login(data.email, data.password)
                     .then(() => {
                         window.location.href = '/personal';
+                    }, (errors) => {
+                        this.errors = errors;
                     })
-                    .catch(() => {
+                    .finally(() => {
                         this.loading = false;
                     });
             }

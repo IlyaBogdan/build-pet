@@ -8,21 +8,29 @@ use App\Repository\ApiTokenRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
-
 use function Symfony\Component\Clock\now;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class AuthService
 {
     private EntityManager $entityManager;
     private UserRepository $userRepository;
     private ApiTokenRepository $apiTokenRepository;
+    private ValidatorInterface $validator;
 
-    public function __construct(ManagerRegistry $doctrine, UserRepository $userRepository, ApiTokenRepository $apiTokenRepository)
+    public function __construct(
+        ManagerRegistry $doctrine,
+        UserRepository $userRepository,
+        ApiTokenRepository $apiTokenRepository,
+        ValidatorInterface $validator
+    )
     {
         $this->entityManager = $doctrine->getManager();
         $this->userRepository = $userRepository;
         $this->apiTokenRepository = $apiTokenRepository;
+        $this->validator = $validator;
     }
 
     public function login(Request $request): ?ApiToken
@@ -61,6 +69,12 @@ class AuthService
         $user->setCreatedAt(now());
         $user->setFirstName($firstName);
         $user->setLastName($lastName);
+        $errors = $this->validator->validate($user);
+        if (count($errors)) {
+            $errorsData = [];
+            foreach($errors as $error) array_push($errorsData, ucfirst($error->getPropertyPath()) . ": {$error->getMessage()}"); 
+            throw new RuntimeException(json_encode($errorsData));
+        }
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
@@ -74,6 +88,11 @@ class AuthService
         $apiToken = $this->apiTokenRepository->findOneBy(['token' => $token]);
         $this->entityManager->remove($apiToken);
         $this->entityManager->flush();
+    }
+
+    public function closeAllConnections(): void
+    {
+
     }
 
     public function generateToken(Request $request, User $user): string
