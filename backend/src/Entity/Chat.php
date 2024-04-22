@@ -23,7 +23,7 @@ class Chat
     private ?int $id = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
-    #[Assert\Choice(choises: [self::TYPE_DIALOG, self::TYPE_CHAT], message: 'Invalid chat type')]
+    #[Assert\Choice(choices: [self::TYPE_DIALOG, self::TYPE_CHAT], message: 'Invalid chat type')]
     private ?int $type = null;
 
     /**
