@@ -16,7 +16,6 @@ export abstract class Broker {
     }
 
     public call(apiMethod: keyof typeof this.api): any {
-        
         if (!this.methodExists(apiMethod)) throw new Error(`Method '${apiMethod}' not exists`);
 
         return (message) => {

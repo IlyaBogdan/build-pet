@@ -1,7 +1,7 @@
 const BACKEND_URL: string = 'http://127.0.0.1:8000/api/broker';
 const BROKER_TOKEN: string = 'wiegufjimaklslld;anbuobbv';
 
-const request = (endpoint: string, data: any, method: 'POST' | 'GET' | 'PUT' | 'DELETE') => {
+const request = (endpoint: string, data: any, method: 'POST' | 'GET' | 'PUT' | 'DELETE' | 'PATCH') => {
     return fetch(`${BACKEND_URL}${endpoint}`, {
         method,
         headers: {
