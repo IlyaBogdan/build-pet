@@ -19,6 +19,12 @@ export const api: BrokerApi = {
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
             // 1. Set user online
             // 2. Notify users in chats, that this user online now
+            return new Promise((resolve, reject) => {
+                BackendAPI.getUserByToken(body.token)
+                    .then((response: UserDto) => {
+                        resolve({ method: 'setUser', user: new User(response) });
+                    });
+            });
         }
     },
     /**

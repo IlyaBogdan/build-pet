@@ -20,8 +20,6 @@ class User
 
     #[ORM\Column(length: 255, type: 'string', unique: true)]
     #[Assert\Email]
-    #[Assert\NotBlank]
-    #[Assert\Unique]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]

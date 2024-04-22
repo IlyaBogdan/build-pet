@@ -12,6 +12,7 @@ type ChatIncomming = {
 export type ChatBrokerMessage = {
     user?: UserIncomming | UserDto;
     dst?: UserIncomming;
+    token: String;
     chat?: ChatIncomming;
     content?: String;
     users?: Array<number>,

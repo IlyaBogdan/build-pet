@@ -70,7 +70,7 @@ export const WsConnection = (() => {
 
         call(methodName, options={}) {
             const methodParams = this.methods.filter((method) => method.method == methodName)[0];
-            const data = Object.assign(methodParams, options);
+            const data = Object.assign(methodParams, options, {token: localStorage.getItem('apiToken')});
 
             wsSend(this.connection, data);
         }
