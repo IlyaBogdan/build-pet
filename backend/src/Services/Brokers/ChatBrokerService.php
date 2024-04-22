@@ -28,17 +28,17 @@ class ChatBrokerService
 
     }
 
-    public function saveMessage(Request $request)
+    public function saveMessage(Request $request, int $chatId)
     {
 
     }
 
-    public function updateMessage(Request $request)
+    public function updateMessage(Request $request, int $messageId)
     {
 
     }
 
-    public function deleteMessage(Request $request)
+    public function deleteMessage(Request $request, int $messageId)
     {
 
     }

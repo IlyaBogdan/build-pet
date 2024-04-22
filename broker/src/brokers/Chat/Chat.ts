@@ -3,6 +3,7 @@ import { Chat } from '../../entities/Chat';
 import { Broker } from '../../abstracts/Broker/Broker';
 import { api } from './api';
 import { BrokerApi } from '../../abstracts/Broker/BrokerApi';
+import { BackendAPI } from '../../utils/API';
 
 export class ChatBroker extends Broker {
 

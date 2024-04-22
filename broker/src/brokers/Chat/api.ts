@@ -5,6 +5,7 @@ import { Message } from "../../entities/Message";
 import { User } from "../../entities/User";
 import { ChatBroker } from "./Chat";
 import { ChatBrokerMessage } from "./message.type";
+import { BackendAPI } from "../../utils/API";
 
 export const api: BrokerApi = {
     

@@ -4,6 +4,9 @@ import { Message } from './Message';
 
 export class Chat {
 
+    static TYPE_CHAT: number = 1;
+    static TYPE_DIALOG: number = 0;
+
     public id: String;
     public title: String;
     public users: Array<User>;
