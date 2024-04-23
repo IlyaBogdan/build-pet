@@ -23,7 +23,7 @@ export class ChatInterceptor extends WsMessageInterceptor {
                 self.chat = body.chat;
 
                 body.chat.messages.forEach((message) => {
-                    if (message.author.id == self.user.id) message.type = 'out';
+                    if (message.user.id == self.user.id) message.type = 'out';
                     else message.type = 'in';
                 });
 

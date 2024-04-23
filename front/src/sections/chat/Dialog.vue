@@ -8,7 +8,7 @@
             </div>
         </div>
         <div class="dialog-messages">
-            <div class="dialog-messages__content">
+            <div class="dialog-messages__content" ref="messagesContainer">
                 <div v-for="(message, index) in chat.messages" :key="message.id">
                     <dialog-message :next="nextAuthor(index)" :message="message"/>
                 </div>
@@ -44,10 +44,19 @@ export default {
             chat: undefined,
         }
     },
+    watch: {
+        chat(chat) {
+            if (chat) {
+                const interval = setInterval(() => {
+                    if (this.scrollToLastMessage()) clearInterval(interval);
+                }, 100);
+            }            
+        }
+    },
     methods: {
         nextAuthor(index) {
             if (index + 1 != this.chat.messages.length) {
-                return this.chat.messages[index + 1].author;
+                return this.chat.messages[index + 1].user;
             }
 
             return undefined;
@@ -64,6 +73,15 @@ export default {
         },
         setTyping() {
 
+        },
+        scrollToLastMessage() {
+            
+            const lastMessageElement = this.$refs.messagesContainer?.lastElementChild;
+            if (lastMessageElement) {
+                lastMessageElement?.scrollIntoView({behavior: 'smooth'});
+                return true;
+            }
+            return false;
         }
     },
     mounted() {
@@ -71,10 +89,8 @@ export default {
         const userId = parseInt(this.$route.query.user);
 
         if (chatId) {
-            console.log('getChat');
             this.connection.call('getChat', { chat: { id: chatId } });
         } else if (userId) {
-            console.log('createChat');
             this.connection.call('createChat', { users: [this.user.id, userId] });
         }
     }

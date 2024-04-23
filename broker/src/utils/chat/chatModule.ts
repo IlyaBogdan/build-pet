@@ -17,7 +17,7 @@ export default {
     },
     saveMessage: (chatId: number, message: MessageDto) => {
         return new Promise((resolve, reject) => {
-            request(`/chat/${chatId}/save-message`, message, 'POST')
+            request(`/chat/${chatId}/save-message`, message, 'PUT')
                 .then((response) => { resolve(response) });
         });
     },

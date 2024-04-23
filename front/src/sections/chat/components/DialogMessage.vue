@@ -1,7 +1,7 @@
 <template>
     <div class="dialog-message" :class="{ grouped: nextUserIsEqual() }" :data-destination="message.type">
         <div class="dialog-message__content">
-            <div class="text-wrapper">{{ message.content }}</div>
+            <div class="text-wrapper">{{ message.message }}</div>
             <div class="dialog-message__date">{{ messageDate(message.date) }}</div>
             <div v-if="!nextUserIsEqual()" class="triangle"></div>
         </div>
@@ -20,13 +20,12 @@ export default {
     },
     methods: {
         messageDate(date) {
-            date = new Date(date);
+            // TODO: add timezones
+            date = new Date(date.date);
             return `${date.getHours()}:${date.getMinutes()}`;
         },
         nextUserIsEqual() {
-            console.log(this.next?.id);
-            console.log(this.message.author.id);
-            return this.next && this.next.id === this.message.author.id;
+            return this.next && this.next.id === this.message.user.id;
         }
     }
 }

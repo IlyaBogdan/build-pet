@@ -65,7 +65,7 @@ export const api: BrokerApi = {
         format: { method: 'getChat', chat: String },
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
             return new Promise((resolve, reject) => {
-                BackendAPI.getChatInfo(body.chat!)
+                BackendAPI.getChatInfo(body.chat.id)
                     .then((response: ChatDto) => {
                         resolve({ method: 'activeChat', chat: response })
                     });
@@ -81,7 +81,7 @@ export const api: BrokerApi = {
         format: { method: 'sendMessage', message: {} },
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
             return new Promise((resolve, reject) => {
-                BackendAPI.saveMessage(body.chat!, body.message!)
+                BackendAPI.saveMessage(body.chat.id, body.message)
                     .then((response: ChatDto) => {
                         broadCast.emit('broadcast', { method: 'activeChat', chat: response });
                         resolve({ method: 'activeChat', chat: response });
