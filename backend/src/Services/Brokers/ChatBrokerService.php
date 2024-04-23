@@ -75,11 +75,12 @@ class ChatBrokerService
         $chat = $this->chatRepository->findOneBy(['id' => $chatId]);
 
         $message = new Message();
-        $messageData = $parameters['message'];
-        $message->setMessage($messageData['message']);
-        $user = $this->userRepository->findOneBy(['id' => $messageData['user']['id']]);
+        $message->setMessage($parameters['content']);
+        $user = $this->userRepository->findOneBy(['id' => $parameters['author']['id']]);
         $message->setUser($user);
         $message->setCreatedAt(now());
+        $message->setUpdatedAt(now());
+        $message->setChat($chat);
         
         $errors = $this->validator->validate($message);
         if (count($errors)) {

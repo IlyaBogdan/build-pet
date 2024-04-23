@@ -57,7 +57,7 @@ class ChatController extends AbstractController
         return new JsonResponse($dto);
     }
 
-    #[Route('/api/broker/chat/{id}', name: 'app_broker_chat_save_message', methods: ['PUT'])]
+    #[Route('/api/broker/chat/{id}/save-message', name: 'app_broker_chat_save_message', methods: ['PUT'])]
     public function saveMessageToChat(Request $request, int $id): Response
     {
         $chat = $this->service->saveMessage($request, $id);
