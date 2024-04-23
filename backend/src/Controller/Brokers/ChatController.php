@@ -31,7 +31,9 @@ class ChatController extends AbstractController
     #[Route('/api/broker/chat', name: 'app_broker_chat', methods: ['POST'])]
     public function createChat(Request $request): Response
     {
-        $chat = $this->service->createChat($request);
+        $parameters = json_decode($request->getContent(), true);
+        if (!$chat = $this->chatRepository->findByUsers($parameters['users']))
+            $chat = $this->service->createChat($request);
         $dto = $this->chatDtoTransformer->transformFromObject($chat);
         return new JsonResponse($dto);
     }
