@@ -8,6 +8,12 @@ const BackendAPI = {
                 .then((response) => { resolve(response) });
         });
     },
+    getUsers: () => {
+        return new Promise((resolve, reject) => {
+            request(`/user/list`, {}, 'GET')
+                .then((response) => { resolve(response) });
+        });
+    }
 };
 
 Object.assign(BackendAPI, chatModule);

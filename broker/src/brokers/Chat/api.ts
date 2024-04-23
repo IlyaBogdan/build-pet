@@ -9,7 +9,11 @@ import { BackendAPI } from "../../utils/API";
 import { UserDto } from "../dto/user.dto";
 import { ChatDto } from "../dto/chat.dto";
 
+/**
+ * API methods for chat broker
+ */
 export const api: BrokerApi = {
+
     /**
      * This method set user online and notify all users, who has opened
      * chats with this user
@@ -22,6 +26,7 @@ export const api: BrokerApi = {
             return new Promise((resolve, reject) => {
                 BackendAPI.getUserByToken(body.token)
                     .then((response: UserDto) => {
+                        console.log(response);
                         resolve({ method: 'setUser', user: new User(response) });
                     });
             });
@@ -109,13 +114,24 @@ export const api: BrokerApi = {
             return { method: 'userDialogs', chats }
         }
     },
+    /**
+     * Return list of all users
+     */
     getUsers: {
         format: { method: 'getUsers' },
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
-            return { method: 'setUserList', users: broker.users };
+            return new Promise((resolve, reject) => {
+                BackendAPI.getUsers()
+                    .then((response: { users: Array<UserDto> }) => {
+                        resolve({ method: 'setUserList', users: response.users });
+                    });
+            });
         }
     },
 
+    /**
+     * Set user online
+     */
     setOnline: {
         format: {},
         action: (user: User, broker: ChatBroker) => {
