@@ -19,6 +19,10 @@ class UserResponseDtoTransformer extends AbstractResponseDtoTransformer
         $dto = new UserResponseDto;
         $dto->id = $user->getId();
         $dto->email = $user->getEmail();
+        $dto->first_name = $user->getFirstName();
+        $dto->last_name = $user->getLastName();
+        $dto->created_at = $user->getCreatedAt();
+        $dto->updated_at = $user->getUpdatedAt();
         
         return $dto;
     }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Dto\Response;
 
-use DateTime;
+use DateTimeImmutable;
 use JMS\Serializer\Annotation as Serialization;
 
 class MessageResponseDto
@@ -15,8 +15,8 @@ class MessageResponseDto
     #[Serialization\Type('string')]
     public string $message;
 
-    #[Serialization\Type("DateTime<'Y-m-d\TH:i:s'>")]
-    public DateTime $date;
+    #[Serialization\Type("DateTimeImmutable<'Y-m-d\TH:i:s'>")]
+    public DateTimeImmutable $date;
 
     #[Serialization\Type('App\Reponse\Dto\UserResponseDto')]
     public UserResponseDto $user;

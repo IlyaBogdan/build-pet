@@ -46,12 +46,12 @@ export const api: BrokerApi = {
      * From backend we accept actual info about chat
      */
     createChat: {
-        format: { method: 'createChat', users: Array<User> },
+        format: { method: 'createChat', users: Array<number> },
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
-            const users: Array<User> = body.users.map((userId) => broker.getUser(userId));
+            const users: Array<number> = body.users;
             const chat = new Chat({
                 users,
-                type: 0
+                type: users.length > 2 ? Chat.TYPE_CHAT : Chat.TYPE_DIALOG
             });
 
             return new Promise((resolve, reject) => {
@@ -100,18 +100,12 @@ export const api: BrokerApi = {
     chatList: {
         format: { method: 'getChats', user: User },
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
-            const chats = broker.chats.filter((chat) => {
-                let userInChat = false;
-                for (const user of chat.users) {
-                    if (user.id == body.user.id) {
-                        userInChat = true;
-                    }
-                }
-
-                return userInChat;
+            return new Promise((resolve, reject) => {
+                BackendAPI.getUsersChats(body.user.id)
+                    .then((chats: Array<ChatDto>) => {
+                        resolve({ method: 'userDialogs', chats });
+                    });
             });
-    
-            return { method: 'userDialogs', chats }
         }
     },
     /**
@@ -122,8 +116,8 @@ export const api: BrokerApi = {
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
             return new Promise((resolve, reject) => {
                 BackendAPI.getUsers()
-                    .then((response: { users: Array<UserDto> }) => {
-                        resolve({ method: 'setUserList', users: response.users });
+                    .then((response: Array<UserDto>) => {
+                        resolve({ method: 'setUserList', users: response });
                     });
             });
         }

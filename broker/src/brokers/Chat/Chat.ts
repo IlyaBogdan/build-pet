@@ -3,8 +3,6 @@ import { Chat } from '../../entities/Chat';
 import { Broker } from '../../abstracts/Broker/Broker';
 import { api } from './api';
 import { BrokerApi } from '../../abstracts/Broker/BrokerApi';
-import { BackendAPI } from '../../utils/API';
-import { UserDto } from '../dto/user.dto';
 
 export class ChatBroker extends Broker {
 
@@ -19,49 +17,5 @@ export class ChatBroker extends Broker {
 
     protected getApi(): BrokerApi {
         return api;
-    }
-
-    public createUser(userInfo: UserDto): User {
-
-        const user = new User(userInfo);
-        this.users.push(user);
-        user.active = true;
-
-        return user;
-    }
-
-    public getUser(id: number): User {
-        const user = this.users.filter((user) => user.id == id)[0];
-        if (!user) throw new Error(`User not found`);
-
-        return user;
-    }
-
-    public getChat(id: number): Chat {
-        const chat = this.chats.filter((chat) => chat.id == id)[0];
-        if (!chat) throw new Error(`Chat not found`);
-
-        return chat;
-    }
-
-    public chatWithUsers(users: Array<User>): Chat|boolean {
-
-        let chatResult: Chat|boolean = false;
-
-        for (const chat of this.chats) {
-            let counter = 0;
-            for (const chatUser of chat.users) {
-                for (const checkUser of users) {
-                    if (chatUser.id == checkUser.id) counter++;
-                }
-            }
-
-            if (counter == chat.users.length && counter == users.length) {
-                chatResult = chat;
-                break;
-            }
-        }
-
-        return chatResult;
     }
 }

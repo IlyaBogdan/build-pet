@@ -32,5 +32,11 @@ export default {
             request(`/chat/${chatId}?message=${message.id}`, message, 'PATCH')
                 .then((response) => { resolve(response) });
         });
+    },
+    getUsersChats: (userId: number) => {
+        return new Promise((resolve, reject) => {
+            request(`/chat/list?user=${userId}`, {}, 'GET')
+                .then((response) => { resolve(response) });
+        });
     }
 }
