@@ -41,7 +41,7 @@ class Chat
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $title = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ["default" => "CURRENT_TIMESTAMP"])]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column]

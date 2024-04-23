@@ -13,12 +13,14 @@ const request = (endpoint: string, data: any, method: 'POST' | 'GET' | 'PUT' | '
     };
 
     if (['GET', 'HEAD'].indexOf(method) == -1) {
-        requestInit['body'] = data;
+        requestInit['body'] = JSON.stringify(data);
     }
 
-    return fetch(`${BACKEND_URL}${endpoint}`, requestInit).then(async (response) => {
-        return response.json();
-    })
+    return fetch(`${BACKEND_URL}${endpoint}`, requestInit)
+        .then((response) => {
+            console.log(response);
+            return response.json();
+        })
 }
 
 export { request };

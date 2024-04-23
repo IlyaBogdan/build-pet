@@ -46,6 +46,12 @@ class ChatBrokerService
 
         $chat = new Chat();
         $chat->setType($type);
+        $chat->setCreatedAt(now());
+        $chat->setUpdatedAt(now());
+
+        $this->entityManager->persist($chat);
+        $this->entityManager->flush();
+
         foreach ($parameters['users'] as $userId) {
             $user = $this->userRepository->findOneBy(['id' => $userId]);
             $chat->addUser($user);
@@ -58,9 +64,7 @@ class ChatBrokerService
             throw new RuntimeException(json_encode($errorsData));
         }
 
-        $this->entityManager->persist($chat);
         $this->entityManager->flush();
-
         return $chat;
     }
 

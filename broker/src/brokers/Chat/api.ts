@@ -1,8 +1,5 @@
 import { broadCast } from "../../abstracts/Broker/BroacastEvent";
 import { BrokerApi } from "../../abstracts/Broker/BrokerApi";
-import { Chat } from "../../entities/Chat";
-import { Message } from "../../entities/Message";
-import { User } from "../../entities/User";
 import { ChatBroker } from "./Chat";
 import { ChatBrokerMessage } from "./message.type";
 import { BackendAPI } from "../../utils/API";
@@ -19,15 +16,14 @@ export const api: BrokerApi = {
      * chats with this user
      */
     pull: {
-        format: { method: 'pull', user: User },
+        format: { method: 'pull', user: Object },
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
             // 1. Set user online
             // 2. Notify users in chats, that this user online now
             return new Promise((resolve, reject) => {
                 BackendAPI.getUserByToken(body.token)
                     .then((response: UserDto) => {
-                        console.log(response);
-                        resolve({ method: 'setUser', user: new User(response) });
+                        resolve({ method: 'setUser', user: response });
                     });
             });
         }
@@ -36,7 +32,7 @@ export const api: BrokerApi = {
      * This method show all active users in chat, who is writing some message
      */
     setTyping: {
-        format: { method: 'setTyping', user: User, chat: Chat, typing: Boolean },
+        format: { method: 'setTyping', user: Object, chat: Object, typing: Boolean },
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
             
         }
@@ -49,15 +45,15 @@ export const api: BrokerApi = {
         format: { method: 'createChat', users: Array<number> },
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
             const users: Array<number> = body.users;
-            const chat = new Chat({
+            const chat = {
                 users,
-                type: users.length > 2 ? Chat.TYPE_CHAT : Chat.TYPE_DIALOG
-            });
+                type: users.length > 2 ? 1 : 0
+            };
 
             return new Promise((resolve, reject) => {
                 BackendAPI.createChat(chat)
                     .then((response: ChatDto) => {
-                        resolve({ method: 'activeChat', chat: new Chat(response) })
+                        resolve({ method: 'activeChat', chat: response })
                     });
             });
         }
@@ -71,7 +67,7 @@ export const api: BrokerApi = {
             return new Promise((resolve, reject) => {
                 BackendAPI.getChatInfo(body.chat!)
                     .then((response: ChatDto) => {
-                        resolve({ method: 'activeChat', chat: new Chat(response) })
+                        resolve({ method: 'activeChat', chat: response })
                     });
             });
         }
@@ -87,9 +83,8 @@ export const api: BrokerApi = {
             return new Promise((resolve, reject) => {
                 BackendAPI.saveMessage(body.chat!, body.message!)
                     .then((response: ChatDto) => {
-                        const chat = new Chat(response);
-                        broadCast.emit('broadcast', { method: 'activeChat', chat });
-                        resolve({ method: 'activeChat', chat });
+                        broadCast.emit('broadcast', { method: 'activeChat', chat: response });
+                        resolve({ method: 'activeChat', chat: response });
                     });
             });
         }
@@ -98,7 +93,7 @@ export const api: BrokerApi = {
      * This method return chat list for current user
      */
     chatList: {
-        format: { method: 'getChats', user: User },
+        format: { method: 'getChats', user: Object },
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
             return new Promise((resolve, reject) => {
                 BackendAPI.getUsersChats(body.user.id)
@@ -128,8 +123,8 @@ export const api: BrokerApi = {
      */
     setOnline: {
         format: {},
-        action: (user: User, broker: ChatBroker) => {
-            user.active = true;
+        action: (user: Object, broker: ChatBroker) => {
+            //user.active = true;
             broadCast.emit('broadcast', { method: 'setUserList', users: broker.users });
         }
     },
