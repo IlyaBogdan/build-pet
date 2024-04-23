@@ -67,8 +67,8 @@ export default {
         }
     },
     mounted() {
-        const chatId = this.$route.query.id;
-        const userId = this.$route.query.user;
+        const chatId = parseInt(this.$route.query.id);
+        const userId = parseInt(this.$route.query.user);
 
         if (chatId) {
             console.log('getChat');

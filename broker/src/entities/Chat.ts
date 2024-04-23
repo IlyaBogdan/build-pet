@@ -21,7 +21,7 @@ export class Chat {
     constructor(chatInfo: ChatDto) {
         this.id = chatInfo.id;
         this.users = chatInfo.users;
-        this.messages = chatInfo.messages.map((messageInfo) => new Message(messageInfo)) ?? [];
+        this.messages = chatInfo.messages?.map((messageInfo) => new Message(messageInfo)) ?? [];
         this.title = chatInfo.title;
         this.type = chatInfo.type;
         this.created_at = chatInfo.created_at ?? new Date;
