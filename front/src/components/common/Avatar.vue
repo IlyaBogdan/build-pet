@@ -1,9 +1,13 @@
 <template>
-    <img class="avatar-icon"
-        width="50"
-        height="50"
-        :src="getAvatar"
-    />
+    <div class="avatar">
+        <img class="avatar-icon"
+            width="50"
+            height="50"
+            :src="getAvatar"
+        />
+        <div v-if="online" class="online"></div>
+    </div>
+    
 </template>
 <script>
 import noIcon from '@/assets/no-icon.png';
@@ -13,6 +17,10 @@ export default {
         avatar: {
             type: String,
             default: ''
+        },
+        online: {
+            type: Boolean,
+            default: () => { return false }
         }
     },
     computed: {
@@ -23,7 +31,22 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-    .avatar-icon {
-        border-radius: 50%;
+    .avatar {
+        position: relative;
+
+        .avatar-icon {
+            border-radius: 50%;
+        }
+
+        .online {
+            display: block;
+            width: 10px;
+            height: 10px;
+            background-color: var(--green-ui);
+            border-radius: 50%;
+            position: absolute;
+            bottom: 6px;
+            right: 4px;
+        }
     }
 </style>

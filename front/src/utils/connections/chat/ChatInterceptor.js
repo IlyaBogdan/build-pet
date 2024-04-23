@@ -13,11 +13,11 @@ export class ChatInterceptor extends WsMessageInterceptor {
                 new ChatConnection().call('pull', { user: self.user });
             },
             setUser: (body) => {
-                self.user = body.user;
                 localStorage.setItem('user', JSON.stringify(body.user));
             },
             setUserList: (body) => {
-                self.userList = body.users.filter((user) => user.id != self?.user.id);
+                const authUser = JSON.parse(localStorage.getItem('user'));
+                self.userList = body.users.filter((user) => user.id != authUser.id);
             },
             activeChat: (body) => {
                 self.chat = body.chat;

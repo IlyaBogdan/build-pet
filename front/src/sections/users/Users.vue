@@ -2,11 +2,9 @@
     <div v-if="userList.length" class="user-list">
         <div v-for="(user, index) in userList" :key="index">
             <div class="user-list__item">
-                <div class="user-avatar">
-                    <img :src="user.avatar ?? noAvatarIcon" /> 
-                </div>
+                <avatar-icon />
                 <div class="user-content">
-                    <router-link :to="`/users/${user.id}`">{{ user.username }}</router-link>
+                    <router-link :to="`/users/${user.id}`">{{ username(user) }}</router-link>
                     <div class="actions">
                         <router-link :to="`/dialog?user=${user.id}`">Message</router-link>
                         <router-link :to="`/call?user=${user.id}`">Call</router-link>
@@ -33,7 +31,9 @@ export default {
         }
     },  
     methods: {
-
+        username(user) {
+            return `${user.first_name} ${user.last_name}`;
+        }
     },
     mounted() {
         this.connection.call('getUsers', { user: this.user});
