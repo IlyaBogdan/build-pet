@@ -1,10 +1,9 @@
-import { Chat } from "../../entities/Chat";
 import { UserDto } from "./user.dto";
 import { MessageDto } from "./message.dto";
 
 enum ChatTypes { 
-    CHAT = Chat.TYPE_CHAT,
-    DIALOG = Chat.TYPE_DIALOG 
+    CHAT = 1,
+    DIALOG = 0 
 }
 
 export type ChatDto = {

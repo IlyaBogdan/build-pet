@@ -1,6 +1,5 @@
 import { broadCast } from "../../abstracts/Broker/BroacastEvent";
 import { BrokerApi } from "../../abstracts/Broker/BrokerApi";
-import { ChatBroker } from "./Chat";
 import { ChatBrokerMessage } from "./message.type";
 import { BackendAPI } from "../../utils/API";
 import { UserDto } from "../dto/user.dto";
@@ -123,7 +122,7 @@ export const api: BrokerApi = {
         format: {},
         action: (user: Object) => {
             //user.active = true;
-            broadCast.emit('broadcast', { method: 'setUserList', users: broker.users });
+            //broadCast.emit('broadcast', { method: 'setUserList', users: broker.users });
         }
     },
 }

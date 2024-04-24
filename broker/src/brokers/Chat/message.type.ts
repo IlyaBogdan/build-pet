@@ -1,4 +1,3 @@
-import { User } from "../../entities/User";
 import { MessageDto } from "../dto/message.dto";
 import { UserDto } from "../dto/user.dto";
 

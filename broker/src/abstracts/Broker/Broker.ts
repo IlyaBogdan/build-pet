@@ -8,7 +8,6 @@ export abstract class Broker {
         this.api = this.getApi();   
     }
 
-    public abstract writeState(): void;
     protected abstract getApi(): BrokerApi;
 
     public methodExists(method: keyof typeof this.api): boolean {

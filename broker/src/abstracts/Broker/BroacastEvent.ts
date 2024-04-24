@@ -1,14 +1,13 @@
 
 
 import { EventEmitter } from 'events';
-import { User } from '../../entities/User';
 import { WebSocketEntry } from '../..';
 import { WebSocket } from 'ws';
 
 interface MessageFormat {
   [key: string]: any;
   method: String;
-  clients?: Array<User>
+  clients?: Array<any>
 }
 
 export class BroadcastEvent extends EventEmitter {
