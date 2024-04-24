@@ -17,9 +17,7 @@ export const api: BrokerApi = {
      */
     pull: {
         format: { method: 'pull', user: Object },
-        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
-            // 1. Set user online
-            // 2. Notify users in chats, that this user online now
+        action: (body: ChatBrokerMessage) => {
             return new Promise((resolve, reject) => {
                 BackendAPI.getUserByToken(body.token)
                     .then((response: UserDto) => {
@@ -33,7 +31,7 @@ export const api: BrokerApi = {
      */
     setTyping: {
         format: { method: 'setTyping', user: Object, chat: Object, typing: Boolean },
-        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
+        action: (body: ChatBrokerMessage) => {
             
         }
     },
@@ -43,7 +41,7 @@ export const api: BrokerApi = {
      */
     createChat: {
         format: { method: 'createChat', users: Array<number> },
-        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
+        action: (body: ChatBrokerMessage) => {
             const users: Array<number> = body.users;
             const chat = {
                 users,
@@ -63,7 +61,7 @@ export const api: BrokerApi = {
      */
     getChat: {
         format: { method: 'getChat', chat: String },
-        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
+        action: (body: ChatBrokerMessage) => {
             return new Promise((resolve, reject) => {
                 BackendAPI.getChatInfo(body.chat.id)
                     .then((response: ChatDto) => {
@@ -79,7 +77,7 @@ export const api: BrokerApi = {
      */
     sendMessage: {
         format: { method: 'sendMessage', message: {} },
-        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
+        action: (body: ChatBrokerMessage) => {
             return new Promise((resolve, reject) => {
                 BackendAPI.saveMessage(body.chat.id, body.message)
                     .then((response: ChatDto) => {
@@ -94,7 +92,7 @@ export const api: BrokerApi = {
      */
     chatList: {
         format: { method: 'getChats', user: Object },
-        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
+        action: (body: ChatBrokerMessage) => {
             return new Promise((resolve, reject) => {
                 BackendAPI.getUsersChats(body.user.id)
                     .then((chats: Array<ChatDto>) => {
@@ -108,7 +106,7 @@ export const api: BrokerApi = {
      */
     getUsers: {
         format: { method: 'getUsers' },
-        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
+        action: (body: ChatBrokerMessage) => {
             return new Promise((resolve, reject) => {
                 BackendAPI.getUsers()
                     .then((response: Array<UserDto>) => {
@@ -123,7 +121,7 @@ export const api: BrokerApi = {
      */
     setOnline: {
         format: {},
-        action: (user: Object, broker: ChatBroker) => {
+        action: (user: Object) => {
             //user.active = true;
             broadCast.emit('broadcast', { method: 'setUserList', users: broker.users });
         }

@@ -2,9 +2,11 @@ import { WebSocketServer, RawData } from 'ws';
 import { execute } from './brokers/BrokerProvider';
 import { BrokerMessage } from './abstracts/Broker/BrokerMessage';
 import { BrokerApi } from './abstracts/Broker/BrokerApi';
+import { SessionStore } from './SessionStore';
 
 const WebSocketEntry = (() => {
     let server: WebSocketServer;
+    const sessionStore: SessionStore = new SessionStore();
 
     return class WebSocketEntry {
         
@@ -31,7 +33,10 @@ const WebSocketEntry = (() => {
 
                 return server;
             }
-            
+        }
+
+        public static getSessionStore(): SessionStore {
+            return sessionStore;
         }
     }
 })();

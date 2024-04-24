@@ -19,7 +19,7 @@ export abstract class Broker {
         if (!this.methodExists(apiMethod)) throw new Error(`Method '${apiMethod}' not exists`);
 
         return (message) => {
-            return this.api[apiMethod].action(message, this);
+            return this.api[apiMethod].action(message);
         }
     }
 
