@@ -10,17 +10,17 @@ type Connection = {
 
 export class WsSession {
 
-    private user: UserDto;
+    private user: UserDto | undefined;
     private online: boolean;
-    private sessionId: string;
+    private sessionId: String;
     private tokens: Array<String> = [];
     private connections: Array<Connection> = [];
 
     constructor(options: {
-        user: UserDto,
-        sessionId: string
+        token: String,
+        sessionId: String
     }) {
-        this.user = options.user;
+        this.tokens.push(options.token);
         this.sessionId = options.sessionId;
         this.online = true;
     }
@@ -98,7 +98,12 @@ export class WsSession {
         return this.sessionId;
     }
 
-    public getUser(): UserDto {
+    public setUser(user: UserDto): WsSession {
+        this.user = user;
+        return this;
+    }
+
+    public getUser(): UserDto | undefined {
         return this.user;
     }
 }
@@ -107,12 +112,12 @@ export class SessionStore {
 
     private sessions: Array<WsSession> = [];
 
-    public createSession(user: UserDto, wsId: WebSocket): WsSession {
+    public createSession(token: string, ws: WebSocket): WsSession {
         while(true) {
             const sessionId: string = randomUUID();
             if (this.getSessionById(sessionId)) continue;
 
-            const session = new WsSession({ sessionId, user });
+            const session = new WsSession({ sessionId, token });
             this.sessions.push(session);
             return session;
         }
@@ -130,7 +135,7 @@ export class SessionStore {
     }
 
     public getSessionByUser(user: UserDto): WsSession|undefined {
-        const session: WsSession = this.sessions.filter((session) => session.getUser().id == user.id)[0];
+        const session: WsSession = this.sessions.filter((session) => session.getUser()?.id == user.id)[0];
         return session;
     }
 }
