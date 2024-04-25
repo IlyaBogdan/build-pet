@@ -1,5 +1,5 @@
 const tsNode = require('ts-node');
-const testTSConfig = require('./tests/tsconfig.json');
+const testTSConfig = require('./test/tsconfig.json');
 
 tsNode.register({
   files: true,

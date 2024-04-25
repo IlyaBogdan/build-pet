@@ -8,6 +8,11 @@ const WebSocketEntry = (() => {
     let server: WebSocketServer;
     const sessionStore: SessionStore = new SessionStore();
 
+    const getSessionByMessage = (message: BrokerMessage & { body: any }) => {
+        let session = sessionStore.getSessionByToken(message.body.token);
+        if (!session) session = sessionStore.getSessionByUser(message.body.token);
+    }
+
     return class WebSocketEntry {
         
         public static getServer(): WebSocketServer {
@@ -16,11 +21,15 @@ const WebSocketEntry = (() => {
                 server = new WebSocketServer({ port: 3000 });
                 console.log('WebSocket is running on 3000 port');
                 server.on('connection', function (ws) {
-                    ws.send(JSON.stringify({ method: 'pull' }));
+                    //ws.send(JSON.stringify({ method: 'pull' }));
+
+                    console.log(ws);
                     ws.on('message', (message: RawData) => {
                         if (BrokerMessage.validateFormat(message)) {
-                            const brokerMessage = BrokerMessage.getInstance();
+                            const brokerMessage = BrokerMessage.getInstance();                           
+
                             console.log(`Accepted: `, brokerMessage);
+
                             execute(brokerMessage)
                                 .then((result) => {
                                     console.log('Response: ', result);

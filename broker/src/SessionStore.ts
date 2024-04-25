@@ -1,4 +1,5 @@
 import { randomUUID } from "crypto";
+import WebSocket from 'ws';
 import { UserDto } from "./brokers/dto/user.dto";
 
 type Connection = {
@@ -7,13 +8,13 @@ type Connection = {
     listenEvents: Array<any>
 }
 
-class WsSession {
+export class WsSession {
 
     private user: UserDto;
     private online: boolean;
     private sessionId: string;
-    private tokens: Array<String>;
-    private connections: Array<Connection>
+    private tokens: Array<String> = [];
+    private connections: Array<Connection> = [];
 
     constructor(options: {
         user: UserDto,
@@ -21,6 +22,7 @@ class WsSession {
     }) {
         this.user = options.user;
         this.sessionId = options.sessionId;
+        this.online = true;
     }
 
     /**
@@ -105,7 +107,7 @@ export class SessionStore {
 
     private sessions: Array<WsSession> = [];
 
-    public createSession(user: UserDto, ws: WebSocket): WsSession {
+    public createSession(user: UserDto, wsId: WebSocket): WsSession {
         while(true) {
             const sessionId: string = randomUUID();
             if (this.getSessionById(sessionId)) continue;

@@ -14,13 +14,14 @@
     "start": "node dist/index.js",
     "start:dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "pretest": "npm run build",
-    "test": "mocha dist/test/**/*.js",
+    "test": "nyc ./node_modules/.bin/_mocha 'test/**/*.test.ts'",
     "test:dev": "ts-mocha test/**/*.spec.ts -w --watch-files '**/*.ts'"
   },
   "author": "Ilya Bogdan",
   "license": "ISC",
   "dependencies": {
     "@types/node-fetch": "^2.6.11",
+    "@types/ws": "^8.5.10",
     "node-fetch": "^2.6.1",
     "uuid": "^9.0.1",
     "ws": "^8.16.0"
@@ -33,7 +34,6 @@
     "@types/node": "^18.11.9",
     "@types/sinon": "^10.0.13",
     "@types/uuid": "^9.0.8",
-    "@types/ws": "^8.5.10",
     "@typescript-eslint/eslint-plugin": "^5.42.1",
     "@typescript-eslint/parser": "^5.42.1",
     "chai": "^4.4.1",
