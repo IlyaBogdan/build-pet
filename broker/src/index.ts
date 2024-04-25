@@ -2,15 +2,20 @@ import { WebSocketServer, RawData } from 'ws';
 import { execute } from './brokers/BrokerProvider';
 import { BrokerMessage } from './abstracts/Broker/BrokerMessage';
 import { BrokerApi } from './abstracts/Broker/BrokerApi';
-import { SessionStore } from './SessionStore';
+import { SessionStore, WsSession } from './SessionStore';
 
 const WebSocketEntry = (() => {
     let server: WebSocketServer;
     const sessionStore: SessionStore = new SessionStore();
 
-    const getSessionByMessage = (message: BrokerMessage & { body: any }) => {
+    const createSession = (message: BrokerMessage & { body: any }): WsSession => {
+        const session = sessionStore.createSession(message.body.token);
+    }
+
+    const getSessionByMessage = (message: BrokerMessage & { body: any }): WsSession => {
         let session = sessionStore.getSessionByToken(message.body.token);
-        if (!session) session = sessionStore.getSessionByUser(message.body.token);
+
+        return session;
     }
 
     return class WebSocketEntry {
