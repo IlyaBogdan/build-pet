@@ -34,6 +34,9 @@ export class ChatInterceptor extends WsMessageInterceptor {
             },
             userTyping: (body) => {
                 self.showUserTyping(body);
+            },
+            usersOnline: (body) => {
+                console.log(body);
             }
         }
     }

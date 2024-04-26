@@ -14,7 +14,7 @@ type Connection = {
 export class WsSession {
 
     private user: UserDto | undefined;
-    private online: boolean;
+    private online: Boolean;
     private sessionId: String;
     private connections: Array<Connection> = [];
 
@@ -54,7 +54,7 @@ export class WsSession {
     public addConnection(ws: WebSocket, token: String): WsSession {
         this.connections.push({ ws, token, listenEvents: [], optional: {} });
         ws.on('close', () => {
-            this.removeConnection(token);
+            console.log('Close connection');
             if (this.getConnections().length == 0) {
                 this.setOnline(false);
             }
@@ -80,7 +80,7 @@ export class WsSession {
         return this;
     }
 
-    public getOnline(): boolean {
+    public getOnline(): Boolean {
         return this.online;
     }
 

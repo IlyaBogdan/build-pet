@@ -58,7 +58,8 @@ export const api: BrokerApi = {
                 BackendAPI.createChat(chat)
                     .then((response: ChatDto) => {
                         broker.setActiveChat(body.token, response);
-                        resolve({ method: 'activeChat', chat: response })
+                        const users = broker.getUsersOnline(body.users);
+                        resolve({ method: 'activeChat', chat: Object.assign(response, {online: users})})
                     });
             });
         }
@@ -79,7 +80,8 @@ export const api: BrokerApi = {
                 BackendAPI.getChatInfo(body.chat.id)
                     .then((response: ChatDto) => {
                         broker.setActiveChat(body.token, response);
-                        resolve({ method: 'activeChat', chat: response })
+                        const users = broker.getUsersOnline(response.users.map((user: UserDto) => user.id));
+                        resolve({ method: 'activeChat', chat: Object.assign(response, {online: users}) })
                     });
             });
         }
@@ -105,12 +107,13 @@ export const api: BrokerApi = {
      */
     sendMessage: {
         format: { method: 'sendMessage', message: {} },
-        action: (body: ChatBrokerMessage) => {
+        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
             return new Promise((resolve, reject) => {
                 BackendAPI.saveMessage(body.chat.id, body.message)
                     .then((response: ChatDto) => {
-                        broadCast.emit('broadcast', { method: 'activeChat', chat: response });
-                        resolve({ method: 'activeChat', chat: response });
+                        const users = broker.getUsersOnline(response.users.map((user: UserDto) => user.id));
+                        broker.actualizeChatInfo(response, users.map((user: UserDto) => user.id));
+                        resolve({ method: 'activeChat', chat: Object.assign(response, {online: users.map((user: UserDto) => user.id)})});
                     });
             });
         }
@@ -140,6 +143,15 @@ export const api: BrokerApi = {
                     .then((response: Array<UserDto>) => {
                         resolve({ method: 'setUserList', users: response });
                     });
+            });
+        }
+    },
+    getOnlineUsers: {
+        format: { method: 'getOnlineUser', user: Object },
+        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
+            return new Promise((resolve, reject) => {
+                const users = broker.getUsersOnline(body.users);
+                resolve({ method: 'usersOnline', users });
             });
         }
     },

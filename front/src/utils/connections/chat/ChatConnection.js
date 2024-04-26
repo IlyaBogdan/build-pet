@@ -13,7 +13,8 @@ export class ChatConnection extends WsConnection {
             { method: 'getChat' },
             { method: 'chatList' },
             { method: 'sendMessage' },
-            { method: 'setTyping' }
+            { method: 'setTyping' },
+            { method: 'getOnlineUsers' }
         ]
     }
 

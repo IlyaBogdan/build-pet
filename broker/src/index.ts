@@ -32,13 +32,13 @@ const WebSocketEntry = (() => {
 
         public static main(ws: WebSocket) {
             return (message: RawData): void => {
+                console.log(sessionStore);
                 if (BrokerMessage.validateFormat(message)) {
                     const brokerMessage = BrokerMessage.getInstance();                           
                     console.log(`Accepted: `, brokerMessage);
 
-                    const session = getSession(brokerMessage, ws);
-                    console.log(session);
-    
+                    getSession(brokerMessage, ws);
+                        
                     execute(brokerMessage)
                         .then((result) => {
                             console.log('Response: ', result);

@@ -111,11 +111,14 @@ export default {
                 let chatInfo = {};
                 if (this.chat.type == 0) {
                     const oponent = this.chat.users.filter((user) => user.id != this.user.id)[0];
+                    chatInfo.id = oponent.id;
                     chatInfo.title = `${oponent.first_name} ${oponent.last_name}`;
                     chatInfo.avatar = oponent.avatar;
-                    chatInfo.online = oponent.online;
                     chatInfo.typing = this.typingUsers.indexOf(oponent.id) != -1;
                     chatInfo.shortName = oponent.first_name;
+                    chatInfo.online = this.chat.online.indexOf(oponent.id) != -1;
+
+                    this.connection.call('getOnlineUsers', { users: [oponent.id] });
                 }
                 if (this.chat.type == 1) {
                     chatInfo.title = 'chat';

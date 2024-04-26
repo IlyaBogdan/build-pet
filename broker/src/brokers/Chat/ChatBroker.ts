@@ -18,6 +18,30 @@ export class ChatBroker extends Broker {
         session.setOnline(true).setUser(user);
     }
 
+    public getUsersOnline(users: Array<number>): Array<UserDto> {
+        console.log(this.sessionStore.getSessions());
+        const sessions = this.sessionStore.getSessions().filter((session) => {
+            return users.indexOf(session.getUser()?.id) != -1 && session.getOnline();
+        });
+
+        return sessions.map(session => session.getUser());
+    }
+
+    public actualizeChatInfo(chat: ChatDto, onlineUsers: Array<number>): void {
+        const sessions = this.sessionStore.getSessions().filter((session) => {
+            return onlineUsers.indexOf(session.getUser().id) != -1 && session.getOnline();
+        });
+
+        let connections = [];
+        sessions.forEach((session) => {
+            session.getConnections().forEach((connection) => {
+                connections.push(connection.ws);
+            })
+        });
+
+        this.broadcastForUsers(connections, { method: 'activeChat', chat: Object.assign(chat, { online: onlineUsers })});
+    }
+
     public setActiveChat(userToken: String, chat: ChatDto): ChatBroker {
         const session = this.sessionStore.getSessionByToken(userToken);
         const connection = session.getConnectionByToken(userToken);
