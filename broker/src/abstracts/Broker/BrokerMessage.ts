@@ -9,10 +9,12 @@ export class BrokerMessage<T = any> {
 
     private static instance: BrokerMessage<ObjectInterface>;
     public method: String;
+    public token: String;
 
     constructor(message: RawData) {
         const json = JSON.parse(message.toString());
         this.method = json.method;
+        this.token = json.token;
         Object.assign(this, json);
     }
 

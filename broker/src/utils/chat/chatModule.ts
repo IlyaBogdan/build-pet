@@ -5,6 +5,7 @@ import { MessageDto } from "../../brokers/dto/message.dto";
 export default {
     createChat: (chatInfo: ChatDto) => {
         return new Promise((resolve, reject) => {
+            console.log('here', chatInfo);
             request(`/chat`, chatInfo, 'POST')
                 .then((response) => { resolve(response) });
         });

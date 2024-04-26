@@ -1,11 +1,9 @@
 
 <template>
     <div class="container dialog" v-if="chat">
-        <div>
-            <div v-if="chat.users.length == 2" >
-                <div></div>
-                <div></div>
-            </div>
+        <div class="chat-info">
+            <avatar-icon class="chat-info__avatar" :avatar="chatInfo.avatar" />
+            <div class="chat-info__title" >{{ chatInfo.title }}</div>
         </div>
         <div class="dialog-messages">
             <div class="dialog-messages__content" ref="messagesContainer">
@@ -14,7 +12,6 @@
                 </div>
             </div>
         </div>
-
         <send-message-field 
             @sendMessage="send" 
             @typing="setTyping"
@@ -93,11 +90,44 @@ export default {
         } else if (userId) {
             this.connection.call('createChat', { users: [this.user.id, userId] });
         }
-    }
+    },
+    computed: {
+        chatInfo() {
+            if (this.chat) {
+                let chatInfo = {};
+                if (this.chat.type == 0) {
+                    const oponent = this.chat.users.filter((user) => user.id != this.user.id)[0];
+                    chatInfo.title = `${oponent.first_name} ${oponent.last_name}`;
+                    chatInfo.avatar = oponent.avatar;
+                }
+                if (this.chat.type == 1) {
+                    chatInfo.title = 'chat';
+                    chatInfo.avatar = this.avatar;
+                } 
 
+                return chatInfo;
+            }
+            return {};
+        }
+    }
 }
 </script>
 <style lang="scss">
+    .chat-info {
+        padding: 15px;
+        display: flex;
+        align-items: center;
+
+        &__avatar {
+            cursor: pointer;
+        }
+
+        &__title {
+            margin-left: 15px;
+            cursor: pointer;
+        }
+    } 
+    
     .dialog {
         position: relative;
         &-messages {

@@ -10,18 +10,6 @@ describe('Test class WsSession', () => {
   const sessionId: string = 'qwertyuiop';
   let wsSession: WsSession|undefined;
 
-  it('init new session', () => {
-    wsSession = new WsSession({ user, sessionId });
-  });
-
-  it('test method `addToken`', () => {
-    wsSession.addToken(token);
-  });
-  
-  it('test method `removeToken`', () => {
-    wsSession.removeToken(token);
-  });
-
   it('test methods `getOnline` and `setOnline`', () => {
     wsSession.setOnline(true);
     expect(wsSession.getOnline() == true);

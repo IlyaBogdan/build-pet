@@ -16,4 +16,7 @@ class ChatResponseDto
 
     #[Serialization\Type('Array<App\Reponse\Dto\MessageResponseDto>')]
     public array $messages;
+
+    #[Serialization\Type('int')]
+    public int $type;
 }

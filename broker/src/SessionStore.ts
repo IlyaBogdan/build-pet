@@ -13,40 +13,17 @@ export class WsSession {
     private user: UserDto | undefined;
     private online: boolean;
     private sessionId: String;
-    private tokens: Array<String> = [];
     private connections: Array<Connection> = [];
 
     constructor(options: {
         token: String,
-        sessionId: String
+        sessionId: String,
+        ws: WebSocket
     }) {
-        this.tokens.push(options.token);
         this.sessionId = options.sessionId;
         this.online = true;
+        this.addConnection(options.ws, options.token);
     }
-
-    /**
-     * Add new api token if user initialized new session
-     * 
-     * @param {Event} event
-     * @returns {WsSession}
-     */
-    public addToken(token: String): WsSession {
-        this.tokens.push(token);
-        return this;
-    }
-
-    /**
-     * Remove token from session, if user logout
-     * 
-     * @param {Event} event
-     * @returns {WsSession}
-     */
-    public removeToken(token: String): WsSession {
-        this.tokens = this.tokens.filter((stored) => stored !== token);
-        return this;
-    }
-
 
     /**
      * Accept event which will be listen for user's session.
@@ -73,6 +50,12 @@ export class WsSession {
 
     public addConnection(ws: WebSocket, token: String): WsSession {
         this.connections.push({ ws, token, listenEvents: [] });
+        ws.on('close', () => {
+            this.removeConnection(token);
+            if (this.getConnections().length == 0) {
+                this.setOnline(false);
+            }
+        });
         return this;
     }
 
@@ -112,12 +95,12 @@ export class SessionStore {
 
     private sessions: Array<WsSession> = [];
 
-    public createSession(token: string, ws: WebSocket): WsSession {
+    public createSession(token: String, ws: WebSocket): WsSession {
         while(true) {
-            const sessionId: string = randomUUID();
+            const sessionId: String = randomUUID();
             if (this.getSessionById(sessionId)) continue;
 
-            const session = new WsSession({ sessionId, token });
+            const session = new WsSession({ sessionId, token, ws });
             this.sessions.push(session);
             return session;
         }
@@ -129,7 +112,7 @@ export class SessionStore {
         return session;
     }
 
-    public getSessionByToken(token: string): WsSession|undefined {
+    public getSessionByToken(token: String): WsSession|undefined {
         const session: WsSession = this.sessions.filter((session) => session.getConnections().filter((connection) => connection.token == token).length)[0];
         return session;
     }

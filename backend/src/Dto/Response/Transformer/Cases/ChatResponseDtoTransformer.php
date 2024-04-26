@@ -32,6 +32,7 @@ class ChatResponseDtoTransformer extends AbstractResponseDtoTransformer
         $dto->id = $chat->getId();
         $dto->messages = $this->messageDtoTransformer->transformFromObjects($chat->getMessages());
         $dto->users = $this->userDtoTransformer->transformFromObjects($chat->getUsers());
+        $dto->type = $chat->getType();
         
         return $dto;
     }

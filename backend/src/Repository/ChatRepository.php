@@ -30,6 +30,6 @@ class ChatRepository extends ServiceEntityRepository
             '
         )->setParameter('count', $count);
 
-        return $query->getResult()[0];
+        return count($query->getResult()) ? $query->getResult()[0] : null;
     }
 }
