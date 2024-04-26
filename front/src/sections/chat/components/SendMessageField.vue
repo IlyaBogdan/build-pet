@@ -1,8 +1,8 @@
 <template lang="">
     <div class="send-message">
-        <textarea 
+        <textarea
+            ref="textArea"
             @keyup.enter="send"
-            @input="checkSize"
             v-model="message"
             @focus="$emit('typing', true)"
             @blur="$emit('typing', false)"
@@ -27,7 +27,7 @@ export default {
             }
         },
         mounted() {
-            const tx = document.getElementsByTagName("textarea")[0];
+            const tx = this.$refs("textArea");
 
             tx.setAttribute("style", "height:" + (tx[0].scrollHeight) + "px;overflow-y:hidden;");
             tx.addEventListener("input", function() {

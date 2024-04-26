@@ -4,6 +4,7 @@ import { ChatBrokerMessage } from "./message.type";
 import { BackendAPI } from "../../utils/API";
 import { UserDto } from "../dto/user.dto";
 import { ChatDto } from "../dto/chat.dto";
+import { ChatBroker } from "./ChatBroker";
 
 /**
  * API methods for chat broker
@@ -16,10 +17,11 @@ export const api: BrokerApi = {
      */
     pull: {
         format: { method: 'pull', user: Object },
-        action: (body: ChatBrokerMessage) => {
+        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
             return new Promise((resolve, reject) => {
                 BackendAPI.getUserByToken(body.token)
                     .then((response: UserDto) => {
+                        broker.setOnlineUser(body.token, response);
                         resolve({ method: 'setUser', user: response });
                     });
             });
@@ -30,8 +32,13 @@ export const api: BrokerApi = {
      */
     setTyping: {
         format: { method: 'setTyping', user: Object, chat: Object, typing: Boolean },
-        action: (body: ChatBrokerMessage) => {
-            
+        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
+            return new Promise((resolve, reject) => {
+                const users = body.chat.users.filter((userInChat) => userInChat.id != body.user.id);
+                broker.notifyUserTyping(body.user, users, body.chat.id, body.typing);
+
+                resolve({ method: 'ok' });
+            });
         }
     },
     /**
@@ -40,7 +47,7 @@ export const api: BrokerApi = {
      */
     createChat: {
         format: { method: 'createChat', users: Array<number> },
-        action: (body: ChatBrokerMessage) => {
+        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
             const users: Array<number> = body.users;
             const chat = {
                 users,
@@ -50,6 +57,7 @@ export const api: BrokerApi = {
             return new Promise((resolve, reject) => {
                 BackendAPI.createChat(chat)
                     .then((response: ChatDto) => {
+                        broker.setActiveChat(body.token, response);
                         resolve({ method: 'activeChat', chat: response })
                     });
             });
@@ -57,14 +65,33 @@ export const api: BrokerApi = {
     },
     /**
      * This method retrives actual information about chat
+     * 
+     * User opened chat. After this method we push event listener
+     * to current session and session will be listening next events:
+     * 
+     * - user_${userId}_typing_in_chat_${chatId}
+     * - user_${userId}_send_message_to_chat_${chatId}
      */
     getChat: {
-        format: { method: 'getChat', chat: String },
+        format: { method: 'getChat', chat: Object },
+        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
+            return new Promise((resolve, reject) => {
+                BackendAPI.getChatInfo(body.chat.id)
+                    .then((response: ChatDto) => {
+                        broker.setActiveChat(body.token, response);
+                        resolve({ method: 'activeChat', chat: response })
+                    });
+            });
+        }
+    },
+
+    chatClosed: {
+        format: { method: 'chatClosed', chat: Object },
         action: (body: ChatBrokerMessage) => {
             return new Promise((resolve, reject) => {
                 BackendAPI.getChatInfo(body.chat.id)
                     .then((response: ChatDto) => {
-                        resolve({ method: 'activeChat', chat: response })
+                        resolve({ method: 'ok' })
                     });
             });
         }
@@ -73,6 +100,8 @@ export const api: BrokerApi = {
      * This method accepts message from client and sends it to backend.
      * From backend we accept actual info about chat.
      * And then we send it to all active users
+     * 
+     * 
      */
     sendMessage: {
         format: { method: 'sendMessage', message: {} },
@@ -93,7 +122,7 @@ export const api: BrokerApi = {
         format: { method: 'getChats', user: Object },
         action: (body: ChatBrokerMessage) => {
             return new Promise((resolve, reject) => {
-                BackendAPI.getUsersChats(body.user.id)
+                BackendAPI.getUsersChats(body.user.id, body.token)
                     .then((chats: Array<ChatDto>) => {
                         resolve({ method: 'userDialogs', chats });
                     });

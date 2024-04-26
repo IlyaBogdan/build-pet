@@ -12,7 +12,8 @@ export class ChatConnection extends WsConnection {
             { method: 'createChat' },
             { method: 'getChat' },
             { method: 'chatList' },
-            { method: 'sendMessage' }
+            { method: 'sendMessage' },
+            { method: 'setTyping' }
         ]
     }
 

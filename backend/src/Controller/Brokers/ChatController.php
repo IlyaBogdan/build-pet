@@ -38,14 +38,6 @@ class ChatController extends AbstractController
         return new JsonResponse($dto);
     }
 
-    #[Route('/api/broker/chat/{id}', name: 'app_broker_chat_info', methods: ['GET'])]
-    public function getChatInfo(Request $request, int $id): Response
-    {
-        $chat = $this->chatRepository->findOneBy(['id' => $id]);
-        $dto = $this->chatDtoTransformer->transformFromObject($chat);
-        return new JsonResponse($dto);
-    }
-
     #[Route('/api/broker/chat/list', name: 'app_broker_chat_list', methods: ['GET'])]
     public function chatList(Request $request): Response
     {
@@ -54,6 +46,14 @@ class ChatController extends AbstractController
         else $chats = $this->chatRepository->findAll();
 
         $dto = $this->chatDtoTransformer->transformFromObjects($chats);
+        return new JsonResponse($dto);
+    }
+
+    #[Route('/api/broker/chat/{id}', name: 'app_broker_chat_info', methods: ['GET'])]
+    public function getChatInfo(Request $request, int $id): Response
+    {
+        $chat = $this->chatRepository->findOneBy(['id' => $id]);
+        $dto = $this->chatDtoTransformer->transformFromObject($chat);
         return new JsonResponse($dto);
     }
 

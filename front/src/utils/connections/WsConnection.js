@@ -51,6 +51,7 @@ export const WsConnection = (() => {
                 const data = JSON.parse(response.data);
                 console.log('Accepted data:');
                 console.log(data);
+                if (data.method == 'ok') return;
                 this._interceptor[data.method](data);
             }
 
@@ -69,6 +70,7 @@ export const WsConnection = (() => {
         }
 
         call(methodName, options={}) {
+            console.log(options);
             const methodParams = this.methods.filter((method) => method.method == methodName)[0];
             const data = Object.assign(methodParams, options, {token: localStorage.getItem('apiToken')});
 

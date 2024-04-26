@@ -1,5 +1,5 @@
 import { BrokerApi } from "../abstracts/Broker/BrokerApi";
-import { ChatBroker } from "./Chat/Chat";
+import { ChatBroker } from "./Chat/ChatBroker";
 
 const brokers = [
     new ChatBroker

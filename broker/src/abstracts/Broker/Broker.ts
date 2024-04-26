@@ -1,11 +1,15 @@
+import { WebSocketEntry } from "../..";
+import { SessionStore } from "../../SessionStore";
 import { BrokerApi } from "./BrokerApi";
 
 export abstract class Broker {
     
     public api: BrokerApi;
+    protected sessionStore: SessionStore;
 
     constructor() {
-        this.api = this.getApi();   
+        this.api = this.getApi();
+        this.sessionStore = new SessionStore();  
     }
 
     protected abstract getApi(): BrokerApi;
@@ -18,7 +22,7 @@ export abstract class Broker {
         if (!this.methodExists(apiMethod)) throw new Error(`Method '${apiMethod}' not exists`);
 
         return (message) => {
-            return this.api[apiMethod].action(message);
+            return this.api[apiMethod].action(message, this);
         }
     }
 

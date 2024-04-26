@@ -5,7 +5,10 @@ import { UserDto } from "./brokers/dto/user.dto";
 type Connection = {
     ws: WebSocket,
     token: String,
-    listenEvents: Array<any>
+    listenEvents: Array<any>,
+    optional: {
+        [key: string]: any | boolean;
+    }
 }
 
 export class WsSession {
@@ -49,7 +52,7 @@ export class WsSession {
     }
 
     public addConnection(ws: WebSocket, token: String): WsSession {
-        this.connections.push({ ws, token, listenEvents: [] });
+        this.connections.push({ ws, token, listenEvents: [], optional: {} });
         ws.on('close', () => {
             this.removeConnection(token);
             if (this.getConnections().length == 0) {
@@ -66,6 +69,10 @@ export class WsSession {
 
     public getConnections(): Array<Connection> {
         return this.connections;
+    }
+
+    public getConnectionByToken(token: String): Connection {
+        return this.connections.filter((connection) => connection.token == token)[0];
     }
 
     public setOnline(online: boolean): WsSession {
@@ -89,11 +96,24 @@ export class WsSession {
     public getUser(): UserDto | undefined {
         return this.user;
     }
+
+    public getOnlineUsersFromLists(users: Array<UserDto>): Array<Connection> {
+        const connections = this.connections;
+
+        return connections;
+    }
 }
 
 export class SessionStore {
 
+    private static instance: SessionStore = undefined;
     private sessions: Array<WsSession> = [];
+
+    constructor() {
+        if (!SessionStore.instance) SessionStore.instance = this;
+
+        return SessionStore.instance;                
+    }
 
     public createSession(token: String, ws: WebSocket): WsSession {
         while(true) {
@@ -120,5 +140,9 @@ export class SessionStore {
     public getSessionByUser(user: UserDto): WsSession|undefined {
         const session: WsSession = this.sessions.filter((session) => session.getUser()?.id == user.id)[0];
         return session;
+    }
+
+    public getSessions(): Array<WsSession> {
+        return this.sessions;
     }
 }

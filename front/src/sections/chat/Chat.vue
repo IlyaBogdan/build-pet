@@ -31,7 +31,7 @@ export default {
         }
     },
     mounted() {
-        this.connection.call('chatList', { user: this.user.id });
+        this.connection.call('chatList', { user: this.user, token: localStorage.getItem('apiToken') });
     },
     methods: {
         openChat(dst) {

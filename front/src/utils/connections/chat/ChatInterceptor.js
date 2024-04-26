@@ -31,6 +31,9 @@ export class ChatInterceptor extends WsMessageInterceptor {
             },
             userDialogs: (body) => {
                 self.dialogs = body.chats;
+            },
+            userTyping: (body) => {
+                self.showUserTyping(body);
             }
         }
     }

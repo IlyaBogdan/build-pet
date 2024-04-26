@@ -32,4 +32,20 @@ class ChatRepository extends ServiceEntityRepository
 
         return count($query->getResult()) ? $query->getResult()[0] : null;
     }
+
+    public function findByUserId(int $userId)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT chat
+             FROM App\Entity\Chat chat
+             JOIN chat.users u
+             WHERE u.id = :userId
+             GROUP BY chat.id
+            '
+        )->setParameter('userId', $userId);
+
+        return $query->getResult();
+    }
 }
