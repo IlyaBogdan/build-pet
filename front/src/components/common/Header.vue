@@ -13,6 +13,7 @@
             </div>
         </div>
         <div class="content authenticated__content" v-if="$store.state.authModule.authenticated">
+            <logo-full v-if="!$store.state.sideBar.opened" @click="openSideBar"/>
             <nav class="authenticated__content-nav">
                 <router-link to="/personal">About</router-link>
                 <router-link to="/personal">About</router-link>
@@ -28,8 +29,10 @@
 </template>
 <script>
 import { API } from '@/utils/API';
+import LogoFull from "./Logo.vue";
 
 export default {
+    components: { LogoFull },
     name: "HeaderElement",
     methods: {
         logout() {
@@ -40,6 +43,11 @@ export default {
         },
         changeLoc(loc) {
             window.location.href = loc;
+        },
+        openSideBar() {
+            console.log('Open side bar');
+            this.$store.commit('setOpened', true);
+            console.log(this.$store.state.sideBar.opened);
         }
     },
 }
@@ -90,6 +98,10 @@ export default {
 
                 &-profile {
 
+                }
+
+                .logo {
+                    cursor: pointer;
                 }
             }
         }
