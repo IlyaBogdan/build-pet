@@ -22,7 +22,9 @@ export default {
         messageDate(date) {
             // TODO: add timezones
             date = new Date(date.date);
-            return `${date.getHours()}:${date.getMinutes()}`;
+            const hours = `${date.getHours()}`.length == 1 ? `0${date.getHours()}` : `${date.getHours()}`;
+            const minutes = `${date.getMinutes()}`.length == 1 ? `0${date.getMinutes()}` : `${date.getMinutes()}`;
+            return `${hours}:${minutes}`;
         },
         nextUserIsEqual() {
             return this.next && this.next.id === this.message.user.id;

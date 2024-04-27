@@ -133,101 +133,101 @@ export default {
 }
 </script>
 <style lang="scss">
-    .chat-info {
-        padding: 15px;
-        display: flex;
-        align-items: center;
-
-        &__avatar {
-            cursor: pointer;
-        }
-
-        &__title {
-            margin-left: 15px;
-            cursor: pointer;
-        }
-
-        &__typing {
-            display: flex;
-            padding: 10px;
-            margin-bottom: -3px;
-
-            .text {
-                font-size: 14px;
-                animation: colorChange 1.8s infinite ease-in-out;
-                color: #6CAD96;
-            }
-
-            .typing {
-                align-items: end;
-                display: flex;
-                height: 17px;
-                margin-left: 5px;
-
-                .dot {
-                    animation: mercuryTypingAnimation 1.8s infinite ease-in-out;
-                    background-color: #6CAD96;
-                    border-radius: 50%;
-                    height: 7px;
-                    margin-right: 4px;
-                    vertical-align: middle;
-                    width: 7px;
-                    display: inline-block;
-
-                    &:nth-child(1) {
-                        animation-delay: 200ms;
-                    }
-                    &:nth-child(2) {
-                        animation-delay: 300ms;
-                    }
-                    &:nth-child(3) {
-                        animation-delay: 400ms;
-                    }
-                    &:last-child {
-                        margin-right: 0;
-                    }
-                }
-            }
-        
-        }
-
-        @keyframes colorChange {
-            0% { color:#6CAD96; }
-            28% { color:#9ECAB9; }
-            44% { color: #B5D9CB; }
-        }
-        
-        @keyframes mercuryTypingAnimation {
-            0% {
-                transform: translateY(0px);
-                background-color:#6CAD96;
-            }
-            28% {
-                transform: translateY(-7px);
-                background-color:#9ECAB9;
-            }
-            44% {
-                transform: translateY(0px);
-                background-color: #B5D9CB;
-            }
-        }
-        
-    } 
-    
     .dialog {
         position: relative;
-        &-messages {
-            &__content {
-                height: calc(var(--container-height) - 70px);
-                overflow-y: scroll;
+        .chat-info {
+            padding: 15px;
+            height: 10%;
+            display: flex;
+            align-items: center;
 
-                &::-webkit-scrollbar {
-                    display: none;
+            &__avatar {
+                cursor: pointer;
+            }
+
+            &__title {
+                margin-left: 15px;
+                cursor: pointer;
+            }
+
+            &__typing {
+                display: flex;
+                padding: 10px;
+                margin-bottom: -3px;
+
+                .text {
+                    font-size: 14px;
+                    animation: colorChange 1.8s infinite ease-in-out;
+                    color: #6CAD96;
                 }
-                -ms-overflow-style: none;  /* IE and Edge */
-                scrollbar-width: none;  /* Firefox */
 
+                .typing {
+                    align-items: end;
+                    display: flex;
+                    height: 17px;
+                    margin-left: 5px;
 
+                    .dot {
+                        animation: mercuryTypingAnimation 1.8s infinite ease-in-out;
+                        background-color: #6CAD96;
+                        border-radius: 50%;
+                        height: 7px;
+                        margin-right: 4px;
+                        vertical-align: middle;
+                        width: 7px;
+                        display: inline-block;
+
+                        &:nth-child(1) {
+                            animation-delay: 200ms;
+                        }
+                        &:nth-child(2) {
+                            animation-delay: 300ms;
+                        }
+                        &:nth-child(3) {
+                            animation-delay: 400ms;
+                        }
+                        &:last-child {
+                            margin-right: 0;
+                        }
+                    }
+                }
+            
+            }
+
+            @keyframes colorChange {
+                0% { color:#6CAD96; }
+                28% { color:#9ECAB9; }
+                44% { color: #B5D9CB; }
+            }
+            
+            @keyframes mercuryTypingAnimation {
+                0% {
+                    transform: translateY(0px);
+                    background-color:#6CAD96;
+                }
+                28% {
+                    transform: translateY(-7px);
+                    background-color:#9ECAB9;
+                }
+                44% {
+                    transform: translateY(0px);
+                    background-color: #B5D9CB;
+                }
+            }
+            
+        } 
+    
+        .dialog-messages {
+            height: calc(var(--container-height) - 150px);
+            overflow-y: scroll;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+
+            &__content {
                 .dialog-message {
                     margin-bottom: 20px;
                     &.grouped {
@@ -240,7 +240,7 @@ export default {
         .send-message {
             position: absolute;
             bottom: 0;
-            left: 0;
+            width: 100%;
         }
     }
 </style>
