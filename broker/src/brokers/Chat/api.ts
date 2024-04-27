@@ -80,8 +80,9 @@ export const api: BrokerApi = {
                 BackendAPI.getChatInfo(body.chat.id)
                     .then((response: ChatDto) => {
                         broker.setActiveChat(body.token, response);
-                        const users = broker.getUsersOnline(response.users.map((user: UserDto) => user.id));
-                        resolve({ method: 'activeChat', chat: Object.assign(response, {online: users}) })
+                        const users = broker.getUsersOnline(response.users.map((user: UserDto) => user.id)).map(user => user.id);
+                        broker.actualizeChatInfo(response, users);
+                        resolve({ method: 'activeChat', chat: Object.assign(response, { online: users }) })
                     });
             });
         }

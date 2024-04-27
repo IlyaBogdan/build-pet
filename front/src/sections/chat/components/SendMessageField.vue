@@ -6,6 +6,7 @@
             v-model="message"
             @focus="$emit('typing', true)"
             @blur="$emit('typing', false)"
+            @input="$emit('typing', true)"
         ></textarea>
         <button-ui @click="send" type="primary">Send</button-ui>
     </div>
@@ -15,7 +16,8 @@ export default {
     name: "send-message-field",
     data() {
         return {
-            message: ''
+            message: '',
+            typing: false
         }
     },
     methods: {
