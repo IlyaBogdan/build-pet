@@ -30,7 +30,8 @@ export default {
         .title {
             font-weight: 600;
             color: white;
-            margin-top: 28px;
+            margin-top: 17px;
+            margin-left: 5px;
         }
     }
 </style>

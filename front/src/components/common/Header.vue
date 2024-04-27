@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="content authenticated__content" v-if="$store.state.authModule.authenticated">
-            <logo-full v-if="!$store.state.sideBar.opened" @click="openSideBar"/>
+            <logo-full :class="{ 'opened': $store.state.sideBar.opened }" @click="openSideBar"/>
             <nav class="authenticated__content-nav">
                 <router-link to="/personal">About</router-link>
                 <router-link to="/personal">About</router-link>
@@ -88,9 +88,10 @@ export default {
 
         &.authenticated {
             .authenticated__content {
-
+                
                 background-color: var(--lavanda-ui);
                 &-nav {
+                    flex-grow: 1;
                     a {
                         color: white;
                     }
@@ -101,7 +102,12 @@ export default {
                 }
 
                 .logo {
+                    margin-left: 10px;
                     cursor: pointer;
+                    transition: .3s all;
+                    &.opened {
+                        margin-left: -150px;
+                    }
                 }
             }
         }
