@@ -1,7 +1,7 @@
 <template>
     <div class="dialog-message" :class="{ grouped: nextUserIsEqual() }" :data-destination="message.type">
         <div class="dialog-message__content">
-            <div class="text-wrapper">{{ message.message }}</div>
+            <div class="text-wrapper" v-html="content"></div>
             <div class="dialog-message__date">{{ messageDate(message.date) }}</div>
             <div v-if="!nextUserIsEqual()" class="triangle"></div>
         </div>
@@ -28,6 +28,15 @@ export default {
         },
         nextUserIsEqual() {
             return this.next && this.next.id === this.message.user.id;
+        }
+    },
+    computed: {
+        content() {
+            const message = this.message.message;
+            const urlRegex = /(((https?:\/\/)|(www\.))[^\s]+)/g;
+            return message.replace(urlRegex, function(url) {
+                return '<a href="' + url + '">' + url + '</a>';
+            });
         }
     }
 }
@@ -70,6 +79,15 @@ export default {
             bottom: -50px;
         }
 
+        a {
+            color: white;
+            text-decoration: underline;
+
+            &:hover {
+                color: rgb(184, 183, 183);
+            }
+        }
+
         &[data-destination="in"] {
             flex-direction: row;
             justify-content: right;
@@ -79,6 +97,7 @@ export default {
 
                 .text-wrapper {
                     text-align: left;
+                    margin-bottom: 10px;
                 }
 
                 .dialog-message__date {
@@ -106,6 +125,7 @@ export default {
         
                 .text-wrapper {
                     text-align: right;
+                    margin-bottom: 10px;
                 }
 
                 .dialog-message__date {
