@@ -33,6 +33,8 @@ export default {
 <style lang="scss" scoped>
     .avatar {
         position: relative;
+        width: 50px;
+        height: 50px;
 
         .avatar-icon {
             border-radius: 50%;
@@ -45,8 +47,8 @@ export default {
             background-color: var(--green-ui);
             border-radius: 50%;
             position: absolute;
-            bottom: 6px;
-            right: 4px;
+            bottom: 1px;
+            right: 2px;
         }
     }
 </style>

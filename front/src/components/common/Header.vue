@@ -21,7 +21,10 @@
                 <router-link to="/personal">About</router-link>
             </nav>
             <div class="auth_status authenticated__content-profile">
-                <avatar-icon />
+                <router-link to="/personal" class="authenticated__content-info">
+                    <div class="username">{{ $store.state.authModule.user.first_name }}</div>
+                    <avatar-icon :avatar="$store.state.authModule.user.avatar"/>
+                </router-link>
                 <button-ui type="primary" @click="logout">Logout</button-ui>
             </div>
         </div>
@@ -98,7 +101,22 @@ export default {
                 }
 
                 &-profile {
+                    margin-right: 20px;
+                }
 
+                &-info {
+                    display: flex;
+                    align-items: center;
+                    color: white;
+                    margin-right: 20px;
+
+                    &:hover {
+                        color: rgb(168, 168, 168);
+                        text-decoration: none;
+                    }
+                    .username {
+                        margin-right: 10px; 
+                    }
                 }
 
                 .logo {
