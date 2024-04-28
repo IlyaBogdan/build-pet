@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\HttpFoundation\File\File;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity('email')]
@@ -28,6 +29,7 @@ class User
     private ?string $password = null;
 
     #[ORM\Column(length: 100, nullable: true)]
+    #[Assert\File(maxSize: '5M', extensions: ['webp', 'png', 'jpg', 'jpeg'], extensionsMessage: 'Invalid format')]
     private ?string $avatar = null;
 
     #[ORM\Column(length: 50)]
