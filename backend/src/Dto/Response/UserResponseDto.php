@@ -21,6 +21,9 @@ class UserResponseDto
     #[Serialization\Type('string')]
     public ?string $last_name;
 
+    #[Serialization\Type('string')]
+    public ?string $avatar;
+
     #[Serialization\Type("DateTimeImmutable<'Y-m-d\TH:i:s'>")]
     public DateTimeImmutable $created_at;
 

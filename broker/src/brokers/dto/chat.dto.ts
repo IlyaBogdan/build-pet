@@ -8,7 +8,7 @@ enum ChatTypes {
 
 export type ChatDto = {
     id?: number,
-    title?: string,
+    title?: String,
     type: ChatTypes,
     users: Array<UserDto | number>,
     messages?: Array<MessageDto>,

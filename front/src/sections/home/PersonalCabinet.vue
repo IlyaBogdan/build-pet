@@ -42,6 +42,7 @@
 </template>
 <script>
 import authGuard from '@/mixins/authGuard';
+import { API } from '@/utils/API';
 
 export default {
     name: 'personal-cabinet',
@@ -69,8 +70,12 @@ export default {
             const reader = new FileReader();
             reader.onload = () => {
                 this.avatar = reader.result;
+                this.updateAvatar();
             }
             if (avatar) reader.readAsDataURL(avatar);
+        },
+        updateAvatar() {
+            API.updateAvatar(this.avatar);
         }
     },
     computed: {
