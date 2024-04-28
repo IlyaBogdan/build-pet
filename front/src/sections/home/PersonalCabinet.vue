@@ -1,6 +1,13 @@
 <template lang="">
     <div class="pesonal">
-        <avatar-icon :avatar="user.avatar" :online="true"/>
+        <div class="personal__parameter avatar">
+            <avatar-icon :avatar="avatarImage" :online="true"/>
+            <upload-file 
+                title="Change"
+                accept="image/*"
+                @selected="avatarPreview"
+            />            
+        </div>
 
         <div class="personal__parameter">
             <div class="personal__parameter-title">First name: </div>
@@ -43,7 +50,8 @@ export default {
         return {
             user: this.$store.state.authModule.user,
             edit: false,
-            clone: {}
+            clone: {},
+            avatar: null
         }
     },
     watch: {
@@ -51,11 +59,18 @@ export default {
             if (this.edit) {
                 this.clone = Object.assign({}, this.user);
             }
-        }
+        },
     },  
     methods: {
         submit() {
 
+        },
+        avatarPreview(avatar) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                this.avatar = reader.result;
+            }
+            if (avatar) reader.readAsDataURL(avatar);
         }
     },
     computed: {
@@ -65,6 +80,9 @@ export default {
             } else {
                 return `Last visit: 23.04 16:37`;
             }
+        },
+        avatarImage() {
+            return this.avatar ?? this.user.avatar;
         }
     }
 }
@@ -75,6 +93,14 @@ export default {
             display: flex;
             padding: 10px 20px;
             border-bottom: 1px solid var(--gray-ui);
+
+            &.avatar {
+                align-items: end;
+
+                .input-file {
+                    margin-left: 10px;
+                }
+            }
 
             &-title {
                 width: 100px;
