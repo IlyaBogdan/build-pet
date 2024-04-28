@@ -14,6 +14,12 @@ class UserController extends AbstractController
         return new Response('Auth user profile');
     }
 
+    #[Route('/api/user', name: 'auth-user-profile', methods: ['POST'])]
+    public function updateUserProfile(): Response
+    {
+        return new Response('Auth user profile');
+    }
+
     #[Route('/api/user/all', name: 'users', methods: ['GET'])]
     public function allUsers(): Response
     {

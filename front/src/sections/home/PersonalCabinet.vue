@@ -5,19 +5,19 @@
         <div class="personal__parameter">
             <div class="personal__parameter-title">First name: </div>
             <div v-if="!edit" class="personal__parameter-value">{{ user.first_name }}</div>
-            <input-ui v-if="edit" v-model:value="user.first_name" />
+            <input-ui v-if="edit" v-model:value="clone.first_name" />
         </div>
 
         <div class="personal__parameter">
             <div class="personal__parameter-title">Last name: </div>
             <div v-if="!edit" class="personal__parameter-value">{{ user.last_name }}</div>
-            <input-ui v-if="edit" v-model:value="user.last_name" />
+            <input-ui v-if="edit" v-model:value="clone.last_name" />
         </div>
 
         <div class="personal__parameter">
             <div class="personal__parameter-title">Email: </div>
             <div v-if="!edit" class="personal__parameter-value">{{ user.email }}</div>
-            <input-ui v-if="edit" v-model:value="user.email" />
+            <input-ui v-if="edit" v-model:value="clone.email" />
         </div>
 
         <div class="personal__parameter">
@@ -28,7 +28,7 @@
         
         <div class="personal__edit">
             <button-ui v-if="!edit" type="primary" @click="edit = true">Edit</button-ui>
-            <button-ui v-if="edit"  type="success">Submit</button-ui>
+            <button-ui v-if="edit"  type="success" @click="submit">Submit</button-ui>
             <button-ui v-if="edit"  type="warning" @click="edit = false">Cancel</button-ui>
         </div>
     </div>
@@ -42,7 +42,20 @@ export default {
     data() {
         return {
             user: this.$store.state.authModule.user,
-            edit: false
+            edit: false,
+            clone: {}
+        }
+    },
+    watch: {
+        edit() {
+            if (this.edit) {
+                this.clone = Object.assign({}, this.user);
+            }
+        }
+    },  
+    methods: {
+        submit() {
+
         }
     },
     computed: {
