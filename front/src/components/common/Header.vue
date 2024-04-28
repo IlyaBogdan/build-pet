@@ -12,7 +12,7 @@
                 <button-ui id="sign-up_btn" type="primary" @click="changeLoc('/sign-up')">Sign Up</button-ui>
             </div>
         </div>
-        <div class="content authenticated__content" v-if="$store.state.authModule.authenticated">
+        <div class="content authenticated__content" v-if="$store.state.authModule.user">
             <logo-full :class="{ 'opened': $store.state.sideBar.opened }" @click="openSideBar"/>
             <nav class="authenticated__content-nav">
                 <router-link to="/personal">About</router-link>
@@ -23,7 +23,7 @@
             <div class="auth_status authenticated__content-profile">
                 <router-link to="/personal" class="authenticated__content-info">
                     <div class="username">{{ $store.state.authModule.user.first_name }}</div>
-                    <avatar-icon :avatar="$store.state.authModule.user.avatar"/>
+                    <avatar-icon :avatar="`http://localhost:8000/${$store.state.authModule.user.avatar}`"/>
                 </router-link>
                 <button-ui type="primary" @click="logout">Logout</button-ui>
             </div>

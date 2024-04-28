@@ -6,14 +6,16 @@
             <div v-if="!nextUserIsEqual()" class="triangle"></div>
         </div>
         <div v-if="!nextUserIsEqual()" class="dialog-message__author">
-            <avatar-icon :avatar="message.user?.avatar"/>
+            <avatar-icon :avatar="staticUrl(message.user?.avatar)"/>
         </div>
     </div>
 </template>
 <script>
+import imgMixin from '@/mixins/img';
 
 export default {
     name: "dialog-message",
+    mixins: [imgMixin],
     props: {
         message: Object,
         next: Object

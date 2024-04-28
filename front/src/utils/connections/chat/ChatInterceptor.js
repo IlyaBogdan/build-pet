@@ -10,7 +10,7 @@ export class ChatInterceptor extends WsMessageInterceptor {
     api(self) {
         return {
             pull: () => {
-                new ChatConnection().call('pull', { user: self.user });
+                new ChatConnection().call('pull', { user: self.$store.state.authModule.user });
             },
             setUser: (body) => {
                 localStorage.setItem('user', JSON.stringify(body.user));
@@ -30,7 +30,7 @@ export class ChatInterceptor extends WsMessageInterceptor {
                 self.$router.push(`/dialog?id=${self.chat.id}`);
             },
             userDialogs: (body) => {
-                self.dialogs = body.chats;
+                self.chats = body.chats;
             },
             userTyping: (body) => {
                 self.showUserTyping(body);

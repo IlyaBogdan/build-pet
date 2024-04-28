@@ -63,10 +63,10 @@ class UserService
         $root = $this->kernel->getProjectDir();
         $absolutePath = "{$root}/public/uploads{$path}";
 
-        if (!file_exists($absolutePath)) mkdir($path, 0777, true);
+        if (!file_exists($absolutePath)) mkdir($absolutePath, 0777, true);
         if ($files = glob("$absolutePath/{$filename}.*")) unlink($files[0]); 
         file_put_contents($absolutePath . "/{$filename}.$type", $data);
 
-        return "/public/uploads{$path}/{$filename}.$type";
+        return "/uploads{$path}/{$filename}.$type";
     }
 }

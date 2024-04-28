@@ -2,7 +2,7 @@
     <div v-if="chats && chats.length">
         <div v-for="(chat, index) in chats" :key="index">
             <div>{{ chat.id }}</div>
-            <router-link :to="`/dialog?id=${chat.id}`"></router-link>
+            <router-link :to="`/dialog?id=${chat.id}`">Message</router-link>
         </div>
     </div>
     <div v-else>
@@ -36,7 +36,6 @@ export default {
     methods: {
         openChat(dst) {
             const url = `/chat?user=${dst.id}`;
-
             window.history.replaceState({}, '', url);
         },
     }

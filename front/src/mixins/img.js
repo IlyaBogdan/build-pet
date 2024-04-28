@@ -5,5 +5,10 @@ export default {
         return {
             avatar: noIcon
         }
-    }
+    },
+    methods: {
+        staticUrl(relationUrl) {
+            return relationUrl ? `http://localhost:8000/${relationUrl}` : '';
+        }
+    },
 }

@@ -1,5 +1,6 @@
 <template lang="">
     <div class="pesonal">
+        <pre-loader v-if="loading"/>
         <div class="personal__parameter avatar">
             <avatar-icon :avatar="avatarImage" :online="true"/>
             <upload-file 
@@ -42,17 +43,19 @@
 </template>
 <script>
 import authGuard from '@/mixins/authGuard';
+import imgMixin from '@/mixins/img';
 import { API } from '@/utils/API';
 
 export default {
     name: 'personal-cabinet',
-    mixins: [authGuard],
+    mixins: [authGuard, imgMixin],
     data() {
         return {
             user: this.$store.state.authModule.user,
             edit: false,
             clone: {},
-            avatar: null
+            avatar: null,
+            loading: false
         }
     },
     watch: {
@@ -64,7 +67,16 @@ export default {
     },  
     methods: {
         submit() {
-
+            const { first_name, last_name, email } = this.clone;
+            const data = { first_name, last_name, email };
+            this.loading = true;
+            API.updateProfile(data)
+                .then((result) => { 
+                    this.user = result;
+                    this.$store.commit('setAuthUser', result);
+                    this.edit = false;
+                    this.loading = false;
+                });
         },
         avatarPreview(avatar) {
             const reader = new FileReader();
@@ -87,7 +99,7 @@ export default {
             }
         },
         avatarImage() {
-            return this.avatar ?? this.user.avatar;
+            return this.avatar ?? this.staticUrl(this.user.avatar);
         }
     }
 }

@@ -2,7 +2,7 @@
     <div v-if="userList.length" class="user-list">
         <div v-for="(user, index) in userList" :key="index">
             <div class="user-list__item">
-                <avatar-icon />
+                <avatar-icon :avatar="staticUrl(user?.avatar)"/>
                 <div class="user-content">
                     <router-link :to="`/users/${user.id}`">{{ username(user) }}</router-link>
                     <div class="actions">
@@ -19,15 +19,14 @@
 </template>
 <script>
 import chatMixin from '@/mixins/chat';
-import noIcon from '@/assets/no-icon.png';
+import imgMixin from '@/mixins/img';
 
 export default {
     name: 'users-list',
-    mixins: [ chatMixin ],
+    mixins: [ chatMixin, imgMixin ],
     data() {
         return {
             userList: [],
-            noAvatarIcon: noIcon
         }
     },  
     methods: {

@@ -79,5 +79,16 @@ export const API = {
                 .then((response) => resolve(response))
                 .catch((response) => reject(response));
         });
+    },
+
+    /**
+     * Update profile info
+     */
+    updateProfile(info) {
+        return new Promise((resolve, reject) => {
+            return request('/user/profile', info, 'POST')
+                .then((response) => resolve(response))
+                .catch((response) => reject(response));
+        });
     }
 }

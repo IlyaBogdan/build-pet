@@ -8,7 +8,7 @@ export default {
         }
     },
     mounted() {
-        this.user = JSON.parse(localStorage.getItem('user'));
+        this.user = this.$store.state.authModule.user;
         this.connection = new ChatConnection().intercept(this);
         this.connection.onOpen(() => {
             this.online = true;
