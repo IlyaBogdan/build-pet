@@ -8,10 +8,11 @@ export default {
         }
     },
     mounted() {
-        this.user = JSON.parse(localStorage.getItem('user'));
+        this.user = this.$store.state.authModule.user;
         this.connection = new ChatConnection().intercept(this);
         this.connection.onOpen(() => {
             this.online = true;
+            this.connection.call('pull', { token: localStorage.getItem('apiToken') });
         })
         .onClose(() => {
             this.online = false;
@@ -19,9 +20,6 @@ export default {
     },
     methods: {
         sendMessage(message) {
-            // 1. Prepare message
-            // 2. call connection method 'sendMessage'
-
             message.user = this.user;
             this.connection.call('sendMessage', message);
         }

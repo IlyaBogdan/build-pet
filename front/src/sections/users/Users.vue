@@ -2,11 +2,9 @@
     <div v-if="userList.length" class="user-list">
         <div v-for="(user, index) in userList" :key="index">
             <div class="user-list__item">
-                <div class="user-avatar">
-                    <img :src="user.avatar ?? noAvatarIcon" /> 
-                </div>
+                <avatar-icon :avatar="staticUrl(user?.avatar)"/>
                 <div class="user-content">
-                    <router-link :to="`/users/${user.id}`">{{ user.username }}</router-link>
+                    <router-link :to="`/users/${user.id}`">{{ username(user) }}</router-link>
                     <div class="actions">
                         <router-link :to="`/dialog?user=${user.id}`">Message</router-link>
                         <router-link :to="`/call?user=${user.id}`">Call</router-link>
@@ -21,19 +19,20 @@
 </template>
 <script>
 import chatMixin from '@/mixins/chat';
-import noIcon from '@/assets/no-icon.png';
+import imgMixin from '@/mixins/img';
 
 export default {
     name: 'users-list',
-    mixins: [ chatMixin ],
+    mixins: [ chatMixin, imgMixin ],
     data() {
         return {
             userList: [],
-            noAvatarIcon: noIcon
         }
     },  
     methods: {
-
+        username(user) {
+            return `${user.first_name} ${user.last_name}`;
+        }
     },
     mounted() {
         this.connection.call('getUsers', { user: this.user});

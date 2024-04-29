@@ -10,27 +10,33 @@ export class ChatInterceptor extends WsMessageInterceptor {
     api(self) {
         return {
             pull: () => {
-                new ChatConnection().call('pull', { user: self.user });
+                new ChatConnection().call('pull', { user: self.$store.state.authModule.user });
             },
             setUser: (body) => {
-                self.user = body.user;
                 localStorage.setItem('user', JSON.stringify(body.user));
             },
             setUserList: (body) => {
-                self.userList = body.users.filter((user) => user.id != self?.user.id);
+                const authUser = JSON.parse(localStorage.getItem('user'));
+                self.userList = body.users.filter((user) => user.id != authUser.id);
             },
             activeChat: (body) => {
                 self.chat = body.chat;
 
                 body.chat.messages.forEach((message) => {
-                    if (message.author.id == self.user.id) message.type = 'out';
+                    if (message.user.id == self.user.id) message.type = 'out';
                     else message.type = 'in';
                 });
 
                 self.$router.push(`/dialog?id=${self.chat.id}`);
             },
             userDialogs: (body) => {
-                self.dialogs = body.chats;
+                self.chats = body.chats;
+            },
+            userTyping: (body) => {
+                self.showUserTyping(body);
+            },
+            usersOnline: (body) => {
+                console.log(body);
             }
         }
     }

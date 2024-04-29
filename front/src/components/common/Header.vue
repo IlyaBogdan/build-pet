@@ -12,7 +12,8 @@
                 <button-ui id="sign-up_btn" type="primary" @click="changeLoc('/sign-up')">Sign Up</button-ui>
             </div>
         </div>
-        <div class="content authenticated__content" v-if="$store.state.authModule.authenticated">
+        <div class="content authenticated__content" v-if="$store.state.authModule.user">
+            <logo-full :class="{ 'opened': $store.state.sideBar.opened }" @click="openSideBar"/>
             <nav class="authenticated__content-nav">
                 <router-link to="/personal">About</router-link>
                 <router-link to="/personal">About</router-link>
@@ -20,7 +21,10 @@
                 <router-link to="/personal">About</router-link>
             </nav>
             <div class="auth_status authenticated__content-profile">
-                <avatar-icon />
+                <router-link to="/personal" class="authenticated__content-info">
+                    <div class="username">{{ $store.state.authModule.user.first_name }}</div>
+                    <avatar-icon :avatar="`http://localhost:8000/${$store.state.authModule.user.avatar}`"/>
+                </router-link>
                 <button-ui type="primary" @click="logout">Logout</button-ui>
             </div>
         </div>
@@ -28,8 +32,10 @@
 </template>
 <script>
 import { API } from '@/utils/API';
+import LogoFull from "./Logo.vue";
 
 export default {
+    components: { LogoFull },
     name: "HeaderElement",
     methods: {
         logout() {
@@ -40,6 +46,11 @@ export default {
         },
         changeLoc(loc) {
             window.location.href = loc;
+        },
+        openSideBar() {
+            console.log('Open side bar');
+            this.$store.commit('setOpened', true);
+            console.log(this.$store.state.sideBar.opened);
         }
     },
 }
@@ -80,16 +91,41 @@ export default {
 
         &.authenticated {
             .authenticated__content {
-
+                
                 background-color: var(--lavanda-ui);
                 &-nav {
+                    flex-grow: 1;
                     a {
                         color: white;
                     }
                 }
 
                 &-profile {
+                    margin-right: 20px;
+                }
 
+                &-info {
+                    display: flex;
+                    align-items: center;
+                    color: white;
+                    margin-right: 20px;
+
+                    &:hover {
+                        color: rgb(168, 168, 168);
+                        text-decoration: none;
+                    }
+                    .username {
+                        margin-right: 10px; 
+                    }
+                }
+
+                .logo {
+                    margin-left: 10px;
+                    cursor: pointer;
+                    transition: .3s all;
+                    &.opened {
+                        margin-left: -150px;
+                    }
                 }
             }
         }

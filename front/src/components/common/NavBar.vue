@@ -14,15 +14,15 @@ import LogoFull from "./Logo.vue";
 
 export default {
     components: { LogoFull },
-    data() {
-        return {
-            opened: true,
-        }
-    },
     methods: {
         close() {
-            console.log('asdasdas');
-            this.opened = false;
+            this.$store.commit('setOpened', false);
+            console.log(this.$store.state.sideBar.opened);
+        }
+    },
+    computed: {
+        opened() {
+            return this.$store.state.sideBar.opened;
         }
     }
 }

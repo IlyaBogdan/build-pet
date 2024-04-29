@@ -68,5 +68,27 @@ export const API = {
     logout() {
         return request('/auth/logout', {}, 'POST')
             .then(() => localStorage.removeItem('apiToken'));
+    },
+
+    /**
+     * Update profile avatar
+     */
+    updateAvatar(base64_image) {
+        return new Promise((resolve, reject) => {
+            return request('/user/profile', { avatar: base64_image }, 'POST')
+                .then((response) => resolve(response))
+                .catch((response) => reject(response));
+        });
+    },
+
+    /**
+     * Update profile info
+     */
+    updateProfile(info) {
+        return new Promise((resolve, reject) => {
+            return request('/user/profile', info, 'POST')
+                .then((response) => resolve(response))
+                .catch((response) => reject(response));
+        });
     }
 }

@@ -1,106 +1,170 @@
 import { broadCast } from "../../abstracts/Broker/BroacastEvent";
 import { BrokerApi } from "../../abstracts/Broker/BrokerApi";
-import { Chat } from "../../entities/Chat";
-import { Message } from "../../entities/Message";
-import { User } from "../../entities/User";
-import { ChatBroker } from "./Chat";
 import { ChatBrokerMessage } from "./message.type";
+import { BackendAPI } from "../../utils/API";
+import { UserDto } from "../dto/user.dto";
+import { ChatDto } from "../dto/chat.dto";
+import { ChatBroker } from "./ChatBroker";
 
+/**
+ * API methods for chat broker
+ */
 export const api: BrokerApi = {
-    
+
+    /**
+     * This method set user online and notify all users, who has opened
+     * chats with this user
+     */
     pull: {
-        format: { method: 'pull', user: User },
+        format: { method: 'pull', user: Object },
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
-            let user: User;
-
-            if (body.user) {
-                try {
-                    user = broker.getUser(body.user!.id);
-                } catch (e) {
-                    user = broker.createUser();
-                }
-            } else { 
-                user = broker.createUser();
-            }
-
-            api.setOnline.action(user, broker);
-
-            return { method: 'setUser', user };
+            return new Promise((resolve, reject) => {
+                BackendAPI.getUserByToken(body.token)
+                    .then((response: UserDto) => {
+                        broker.setOnlineUser(body.token, response);
+                        resolve({ method: 'setUser', user: response });
+                    });
+            });
         }
     },
-
+    /**
+     * This method show all active users in chat, who is writing some message
+     */
     setTyping: {
-        format: { method: 'setTyping', user: User, chat: Chat, typing: Boolean },
+        format: { method: 'setTyping', user: Object, chat: Object, typing: Boolean },
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
-            const user = broker.getUser(body.user!.id);
-            const chat = broker.getChat(body.chat!.id);
-            
-            return chat;
+            return new Promise((resolve, reject) => {
+                const users = body.chat.users.filter((userInChat) => userInChat.id != body.user.id);
+                broker.notifyUserTyping(body.user, users, body.chat.id, body.typing);
+
+                resolve({ method: 'ok' });
+            });
         }
     },
+    /**
+     * This method create new chat with user and sends it to backend.
+     * From backend we accept actual info about chat
+     */
+    createChat: {
+        format: { method: 'createChat', users: Array<number> },
+        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
+            const users: Array<number> = body.users;
+            const chat = {
+                users,
+                type: users.length > 2 ? 1 : 0
+            };
+
+            return new Promise((resolve, reject) => {
+                BackendAPI.createChat(chat)
+                    .then((response: ChatDto) => {
+                        broker.setActiveChat(body.token, response);
+                        const users = broker.getUsersOnline(body.users);
+                        resolve({ method: 'activeChat', chat: Object.assign(response, {online: users})})
+                    });
+            });
+        }
+    },
+    /**
+     * This method retrives actual information about chat
+     * 
+     * User opened chat. After this method we push event listener
+     * to current session and session will be listening next events:
+     * 
+     * - user_${userId}_typing_in_chat_${chatId}
+     * - user_${userId}_send_message_to_chat_${chatId}
+     */
+    getChat: {
+        format: { method: 'getChat', chat: Object },
+        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
+            return new Promise((resolve, reject) => {
+                BackendAPI.getChatInfo(body.chat.id)
+                    .then((response: ChatDto) => {
+                        broker.setActiveChat(body.token, response);
+                        const users = broker.getUsersOnline(response.users.map((user: UserDto) => user.id)).map(user => user.id);
+                        broker.actualizeChatInfo(response, users);
+                        resolve({ method: 'activeChat', chat: Object.assign(response, { online: users }) })
+                    });
+            });
+        }
+    },
+
+    chatClosed: {
+        format: { method: 'chatClosed', chat: Object },
+        action: (body: ChatBrokerMessage) => {
+            return new Promise((resolve, reject) => {
+                BackendAPI.getChatInfo(body.chat.id)
+                    .then((response: ChatDto) => {
+                        resolve({ method: 'ok' })
+                    });
+            });
+        }
+    },
+    /**
+     * This method accepts message from client and sends it to backend.
+     * From backend we accept actual info about chat.
+     * And then we send it to all active users
+     * 
+     * 
+     */
     sendMessage: {
         format: { method: 'sendMessage', message: {} },
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
-            const chat = broker.getChat(body.chat!.id);
-            body.message.author = broker.getUser(body.message.author.id);
-            
-            chat.messages.push(new Message(body.message));
-            broadCast.emit('broadcast', { method: 'activeChat', chat });
-    
-            return { method: 'activeChat', chat };
-        }
-    },
-    createChat: {
-        format: { method: 'createChat', users: Array<User> },
-        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
-            const users: Array<User> = body.users.map((userId) => broker.getUser(userId));
-
-            let chat = broker.chatWithUsers(users);
-            if (!chat) {
-                chat = new Chat(users);
-                broker.chats.push(chat);
-            }
-    
-            return { method: 'activeChat', chat }
-        }
-    },
-    getChat: {
-        format: { method: 'getChat', chat: String },
-        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
-            const chat = broker.getChat(body.chat.id);
-    
-            return { method: 'activeChat', chat }
-        }
-    },
-    chatList: {
-        format: { method: 'getChats', user: User },
-        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
-            const chats = broker.chats.filter((chat) => {
-                let userInChat = false;
-                for (const user of chat.users) {
-                    if (user.id == body.user.id) {
-                        userInChat = true;
-                    }
-                }
-
-                return userInChat;
+            return new Promise((resolve, reject) => {
+                BackendAPI.saveMessage(body.chat.id, body.message)
+                    .then((response: ChatDto) => {
+                        const users = broker.getUsersOnline(response.users.map((user: UserDto) => user.id));
+                        broker.actualizeChatInfo(response, users.map((user: UserDto) => user.id));
+                        resolve({ method: 'activeChat', chat: Object.assign(response, {online: users.map((user: UserDto) => user.id)})});
+                    });
             });
-    
-            return { method: 'userDialogs', chats }
         }
     },
+    /**
+     * This method return chat list for current user
+     */
+    chatList: {
+        format: { method: 'getChats', user: Object },
+        action: (body: ChatBrokerMessage) => {
+            return new Promise((resolve, reject) => {
+                BackendAPI.getUsersChats(body.user.id, body.token)
+                    .then((chats: Array<ChatDto>) => {
+                        resolve({ method: 'userDialogs', chats });
+                    });
+            });
+        }
+    },
+    /**
+     * Return list of all users
+     */
     getUsers: {
         format: { method: 'getUsers' },
+        action: (body: ChatBrokerMessage) => {
+            return new Promise((resolve, reject) => {
+                BackendAPI.getUsers()
+                    .then((response: Array<UserDto>) => {
+                        resolve({ method: 'setUserList', users: response });
+                    });
+            });
+        }
+    },
+    getOnlineUsers: {
+        format: { method: 'getOnlineUser', user: Object },
         action: (body: ChatBrokerMessage, broker: ChatBroker) => {
-            return { method: 'setUserList', users: broker.users };
+            return new Promise((resolve, reject) => {
+                const users = broker.getUsersOnline(body.users);
+                resolve({ method: 'usersOnline', users });
+            });
         }
     },
 
+    /**
+     * Set user online
+     */
     setOnline: {
         format: {},
-        action: (user: User, broker: ChatBroker) => {
-            user.active = true;
-            broadCast.emit('broadcast', { method: 'setUserList', users: broker.users });
+        action: (user: Object) => {
+            //user.active = true;
+            //broadCast.emit('broadcast', { method: 'setUserList', users: broker.users });
         }
     },
 }
