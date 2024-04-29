@@ -18,6 +18,8 @@ class UserRepository extends ServiceEntityRepository
 
     public function findByApiToken(string $apiToken): ?User
     {
-        return $this->apiTokenRepository->findOneBy(['token' => $apiToken])?->getUser();
+        $user = $this->apiTokenRepository->findOneBy(['token' => $apiToken])?->getUser();
+
+        return $user;
     }
 }

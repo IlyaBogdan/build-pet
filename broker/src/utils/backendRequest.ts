@@ -18,7 +18,6 @@ const request = (endpoint: string, data: any, method: 'POST' | 'GET' | 'PUT' | '
 
     return fetch(`${BACKEND_URL}${endpoint}`, requestInit)
         .then((response) => {
-            console.log(response);
             return response.json();
         })
 }

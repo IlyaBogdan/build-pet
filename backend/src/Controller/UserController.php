@@ -38,9 +38,12 @@ class UserController extends AbstractController
     }
 
     #[Route('/api/user', name: 'auth-user-profile', methods: ['GET'])]
-    public function authUserProfile(): Response
+    public function authUserProfile(Request $request): Response
     {
-        return new Response('Auth user profile');
+        $user = $this->getAuthUser($request);
+        $dto = $this->userDtoTransformer->transformFromObject($user);
+
+        return new JsonResponse($dto);
     }
 
     #[Route('/api/user/profile', name: 'update-user-profile', methods: ['POST'])]

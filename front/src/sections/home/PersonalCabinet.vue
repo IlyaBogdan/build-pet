@@ -1,5 +1,5 @@
 <template lang="">
-    <div class="pesonal">
+    <div class="pesonal" v-if="user">
         <pre-loader v-if="loading"/>
         <div class="personal__parameter avatar">
             <avatar-icon :avatar="avatarImage" :online="true"/>
@@ -58,6 +58,9 @@ export default {
             loading: false
         }
     },
+    mounted() {
+        if (!this.user) this.getUser();
+    },
     watch: {
         edit() {
             if (this.edit) {
@@ -88,6 +91,12 @@ export default {
         },
         updateAvatar() {
             API.updateAvatar(this.avatar);
+        },
+        getUser() {
+            API.getAuthUserInfo()
+                .then((response) => {
+                    this.$store.commit('setAuthUser', response);
+                })
         }
     },
     computed: {

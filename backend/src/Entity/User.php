@@ -10,11 +10,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity('email')]
 #[ApiResource]
-class User
+class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -173,5 +174,20 @@ class User
         }
 
         return $this;
+    }
+
+    public function getRoles(): array
+    {
+        return [];
+    }
+
+    public function eraseCredentials(): void
+    {
+        
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->getId();
     }
 }

@@ -34,12 +34,12 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
         $apiToken = $request->headers->get('X-Api-Token');
         if (!$apiToken) throw new CustomUserMessageAuthenticationException('No API token provided');
         if (!$this->validateToken($request, $apiToken)) throw new CustomUserMessageAuthenticationException('Invalid token');
-
+       
         return new SelfValidatingPassport(
             new UserBadge($apiToken, function($apiToken) {
                 $user = $this->userRepository->findByApiToken($apiToken);
                 if (!$user) throw new UserNotFoundException();
-
+                
                 return $user;
             })
         );
