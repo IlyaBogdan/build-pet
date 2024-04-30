@@ -141,6 +141,7 @@ export default {
             display: flex;
             align-items: center;
             border-bottom: 1px solid var(--gray-ui);
+            margin-bottom: 10px;
 
             &__avatar {
                 cursor: pointer;

@@ -21,7 +21,6 @@ export default {
 </script>
 <style lang="scss">
     .user-list {
-        width: 550px;
         display: flex;
         flex-direction: column;
 

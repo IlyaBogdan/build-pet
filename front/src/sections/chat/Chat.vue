@@ -1,8 +1,11 @@
 <template>
-    <div v-if="chats && chats.length">
-        <div v-for="(chat, index) in chats" :key="index">
-            <div>{{ chat.id }}</div>
-            <router-link :to="`/dialog?id=${chat.id}`">Message</router-link>
+    <div class="chat-list" v-if="chats && chats.length">
+        <div class="chat" v-for="(chat, index) in chats.map(chat => convertChatInfo(chat))" :key="index">
+            <avatar-icon class="chat-image" :avatar="chat.avatar" />
+            <div class="chat-info">
+                <div>{{ chat.title }}</div>
+                <router-link :to="`/dialog?id=${chat.id}`">Message</router-link>
+            </div>
         </div>
     </div>
     <div v-else>
@@ -20,10 +23,11 @@
  */
 
 import chatMixin from '@/mixins/chat';
+import imgMixin from '@/mixins/img';
 
 export default {
     components: {  },
-    mixins: [ chatMixin ],
+    mixins: [ chatMixin, imgMixin ],
     name: "chat-element",
     data() {
         return {
@@ -37,34 +41,32 @@ export default {
         openChat(dst) {
             const url = `/chat?user=${dst.id}`;
             window.history.replaceState({}, '', url);
-        },
+        },            
     }
 }
 </script>
 
 <style lang="scss">
-    .status {
-        text-transform: uppercase;
+    .chat-list {
+        .chat {
+            padding: 10px;
+            display: flex;
+            border-bottom: 1px solid var(--gray-ui);
 
-        border-radius: 15px;
-        padding: 10px 15px;
-        width: 150px;
-        text-align: center;
-        font-size: 16px;
-        font-weight: 600;
-        color: rgb(255, 255, 255);
+            &-image {
 
-        &[data-online="false"] {
-            background-color: rgb(182, 43, 43);
+            }
+
+            &-info {
+                margin-left: 10px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+
+                a {
+                    font-size: 10px;
+                }
+            }
         }
-
-        &[data-online="true"] {
-            background-color: rgb(74, 194, 50);
-        }
-    }
-
-    .dialog {
-        margin: 20px;
-        
     }
 </style>

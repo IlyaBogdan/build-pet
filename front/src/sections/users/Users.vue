@@ -41,11 +41,8 @@ export default {
 </script>
 <style lang="scss">
     .user-list {
-
-        width: 500px;
-
         &__item {
-            width: 100%;
+            width: calc(100% - 20px);
             border-bottom: 1px solid var(--gray-ui);
             display: flex;
             padding: 10px;
