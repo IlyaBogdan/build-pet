@@ -2,8 +2,7 @@ const BACKEND_URL = 'http://127.0.0.1:8000/api';
 
 const request = async (url, params, method) => {
     let headers = {
-        'Content-Type': 'application/json',
-        'X-Api-Token': localStorage.getItem('apiToken')
+        'Content-Type': 'application/json'
     };
 
     const initial = {
@@ -13,14 +12,17 @@ const request = async (url, params, method) => {
         credentials: "include"
     }
 
+    console.log(initial);
+
+    if (localStorage.getItem('apiToken')) initial.headers['X-Api-Token'] = localStorage.getItem('apiToken'); 
     if (method != 'GET' && method != 'HEAD') initial.body = JSON.stringify(params);
 
     return fetch(`${BACKEND_URL}${url}`, initial).then(async (response) => { 
         if (response.ok) return response.json();
         else {
+            // eslint-disable-next-line no-debugger
+            debugger;
             if (response.status == 401) {
-                // eslint-disable-next-line no-debugger
-                debugger;
                 localStorage.removeItem('apiToken');
                 localStorage.removeItem('user');
                 window.location.href = '/sign-in';
@@ -84,8 +86,9 @@ export const API = {
         return new Promise((resolve) => {
             request('/user', {}, 'GET')
                 .then((response) => {
-                    localStorage.setItem('user', response);
-                    resolve();
+                    console.log(response);
+                    localStorage.setItem('user', JSON.stringify(response));
+                    resolve(response);
                 });
             });
     },

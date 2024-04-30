@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Repository\BrokerRepository;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,32 +18,48 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 
 class ApiTokenAuthenticator extends AbstractAuthenticator
 {
-    private $userRepository;
+    private UserRepository $userRepository;
+    private BrokerRepository $brokerRepository;
 
-    public function __construct(UserRepository $userRepository)
-    {
-        $this->userRepository = $userRepository;    
+    public function __construct(
+        UserRepository $userRepository,
+        BrokerRepository $brokerRepository
+    ) {
+        $this->userRepository = $userRepository;  
+        $this->brokerRepository = $brokerRepository;  
     }
 
     public function supports(Request $request): ?bool
     {
-        return $request->headers->has('X-Api-Token');
+        return $request->headers->has('X-Api-Token') || $request->headers->has('X-Broker-Token');
     }
 
     public function authenticate(Request $request): Passport
     {
         $apiToken = $request->headers->get('X-Api-Token');
-        if (!$apiToken) throw new CustomUserMessageAuthenticationException('No API token provided');
-        if (!$this->validateToken($request, $apiToken)) throw new CustomUserMessageAuthenticationException('Invalid token');
-       
-        return new SelfValidatingPassport(
-            new UserBadge($apiToken, function($apiToken) {
-                $user = $this->userRepository->findByApiToken($apiToken);
-                if (!$user) throw new UserNotFoundException();
-                
-                return $user;
-            })
-        );
+        $brokerToken = $request->headers->get('X-Broker-Token');
+        if ($apiToken)
+        {
+            return new SelfValidatingPassport(
+                new UserBadge($apiToken, function($apiToken) {
+                    $user = $this->userRepository->findByApiToken($apiToken);
+                    if (!$user) throw new UserNotFoundException();
+                    
+                    return $user;
+                })
+            );
+        }
+        if ($brokerToken)
+        {
+            return new SelfValidatingPassport(
+                new UserBadge($brokerToken, function($brokerToken) {
+                    $broker = $this->brokerRepository->findOneBy(['access_token' => $brokerToken]);
+                    if (!$broker) throw new UserNotFoundException();
+                    
+                    return $broker;
+                })
+            );
+        }
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response

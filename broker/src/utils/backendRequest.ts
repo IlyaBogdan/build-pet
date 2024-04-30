@@ -1,17 +1,22 @@
 import fetch from 'node-fetch';
+var Storage = require('node-storage');
 
-const BACKEND_URL: string = 'http://127.0.0.1:8000/api/broker';
-const BROKER_TOKEN: string = 'wiegufjimaklslld;anbuobbv';
+const store = new Storage('./store.json');
 
-const request = (endpoint: string, data: any, method: 'POST' | 'GET' | 'PUT' | 'DELETE' | 'PATCH') => {
+const BACKEND_URL: String = 'http://127.0.0.1:8000/api/broker';
+const BROKER_TOKEN: String|null = store.get('access_token');
+
+const request = (endpoint: String, data: any, method: 'POST' | 'GET' | 'PUT' | 'DELETE' | 'PATCH') => {
     let requestInit = {
         method,
         headers: {
             'Content-Type': 'application/json',
-            'X-Broker-Token': BROKER_TOKEN
         },
     };
 
+    if (BROKER_TOKEN) {
+        requestInit.headers['X-Broker-Token'] = BROKER_TOKEN;
+    }
     if (['GET', 'HEAD'].indexOf(method) == -1) {
         requestInit['body'] = JSON.stringify(data);
     }

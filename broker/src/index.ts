@@ -3,9 +3,15 @@ import { execute } from './brokers/BrokerProvider';
 import { BrokerMessage } from './abstracts/Broker/BrokerMessage';
 import { BrokerApi } from './abstracts/Broker/BrokerApi';
 import { SessionStore, WsSession } from './SessionStore';
+import { BackendAPI } from './utils/API';
+import { request } from './utils/backendRequest';
+var Storage = require('node-storage');
+
+const store = new Storage('./store.json');
 
 const WebSocketEntry = (() => {
     let server: WebSocketServer;
+    let accessToken: String = null;
     const sessionStore: SessionStore = new SessionStore();
 
     const getSession = (message: BrokerMessage, ws: WebSocket): WsSession => {
@@ -17,14 +23,18 @@ const WebSocketEntry = (() => {
 
     return class WebSocketEntry {
         
-        public static getServer(): WebSocketServer {
+        public static async getServer(): Promise<WebSocketServer> {
             if (server) return server;
             else {
-                server = new WebSocketServer({ port: 3000 });
-                console.log('WebSocket is running on 3000 port');
-                server.on('connection', function (ws) {
-                    ws.on('message', WebSocketEntry.main(ws));
-                });
+                await request('', {}, 'POST')
+                    .then((response) => {
+                        store.put('accessToken', response.access_token);
+                        server = new WebSocketServer({ port: 3000 });
+                        console.log('WebSocket is running on 3000 port');
+                        server.on('connection', function (ws) {
+                            ws.on('message', WebSocketEntry.main(ws));
+                        });
+                    });
 
                 return server;
             }
@@ -32,7 +42,6 @@ const WebSocketEntry = (() => {
 
         public static main(ws: WebSocket) {
             return (message: RawData): void => {
-                console.log(sessionStore);
                 if (BrokerMessage.validateFormat(message)) {
                     const brokerMessage = BrokerMessage.getInstance();                           
                     console.log(`Accepted: `, brokerMessage);
@@ -51,6 +60,10 @@ const WebSocketEntry = (() => {
 
         public static getSessionStore(): SessionStore {
             return sessionStore;
+        }
+
+        public static accessToken(): String {
+            return accessToken;
         }
     }
 })();

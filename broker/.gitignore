@@ -134,3 +134,5 @@ dist
 # Build distribution directory
 dist/
 out-tsc
+
+store.json

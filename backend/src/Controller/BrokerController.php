@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Dto\Response\Transformer\Cases\UserResponseDtoTransformer;
 use App\Repository\UserRepository;
+use App\Services\BrokerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,10 +15,24 @@ class BrokerController extends AbstractController
 {
     private UserRepository $userRepository;
     private UserResponseDtoTransformer $userDtoTransformer;
+    private BrokerService $brokerService;
 
-    public function __construct(UserRepository $userRepository, UserResponseDtoTransformer $userDtoTransformer) {
+    public function __construct(
+        UserRepository $userRepository,
+        UserResponseDtoTransformer $userDtoTransformer,
+        BrokerService $brokerService
+    ) {
         $this->userRepository = $userRepository;
         $this->userDtoTransformer = $userDtoTransformer;
+        $this->brokerService = $brokerService;
+    }
+
+    #[Route('/api/broker', name: 'app_broker_replication', methods: ['POST'])]
+    public function brokerReplication(Request $request): JsonResponse
+    {
+        $broker = $this->brokerService->replicate($request);
+
+        return new JsonResponse(['access_token' => $broker->getAccessToken()]);
     }
 
     #[Route('/api/broker/user', name: 'app_broker_user_info', methods: ['GET'])]
