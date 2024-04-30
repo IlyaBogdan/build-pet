@@ -22,9 +22,8 @@ const routes = [
   { path: '/personal', component: PersonalCabinet, name: 'personal' },
   { path: '/messanger', component: Chat, name: 'messanger' },
   { path: '/dialog', component: Dialog, name: 'dialog' },
-  { path: '/users', component: Users, name: 'users', children: [
-    { path: '/:id', component: UserPage, name: 'user-page' },
-  ]},
+  { path: '/users', component: Users, name: 'users'},
+  { path: '/users/:id', component: UserPage, name: 'user-page' },
 
   { path: "/:pathMatch(.*)*", component: NotFound, name: '404' }
 ]

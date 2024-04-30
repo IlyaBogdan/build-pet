@@ -62,4 +62,13 @@ class UserController extends AbstractController
     {
         return new Response('All users');
     }
+
+    #[Route('/api/user/{id}', name: 'some_user_profile', methods: ['GET'])]
+    public function someUserProfileById(int $id): Response
+    {
+        $user = $this->userRepository->findOneBy(['id' => $id]);
+        $dto = $this->userDtoTransformer->transformFromObject($user);
+
+        return new JsonResponse($dto);
+    }
 }

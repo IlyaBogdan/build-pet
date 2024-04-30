@@ -93,6 +93,13 @@ export const API = {
             });
     },
 
+    getUserProfile(userId) {
+        return new Promise((resolve) => {
+            request(`/user/${userId}`, {}, 'GET')
+                .then((response) => resolve(response));
+            });
+    },
+
     /**
      * Update profile avatar
      * @param {String} base64_image
