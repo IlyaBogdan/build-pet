@@ -1,14 +1,15 @@
-FROM node:21-alpine
-
-#RUN npm install -g http-server
+FROM node:19-alpine
 
 WORKDIR /var/www/html
-COPY package.json .
 
-RUN npm install
-RUN npm i -g @vue/cli
+COPY package.json .
+COPY package-lock.json . 
+
+RUN npm install --silent @vue/cli @vue/cli-service @vue/cli-plugin-babel @vue/cli-plugin-eslint
+RUN npm install --silent
 
 COPY . .
 
-#CMD [ "http-server", "dist" ]
-CMD ["npm", "run", "serve"]
+RUN npm rebuild node-sass
+
+EXPOSE 8080

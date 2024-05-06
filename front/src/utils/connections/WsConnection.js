@@ -35,7 +35,7 @@ export const WsConnection = (() => {
             if (instance) return instance;
             else {
                 this.methods = this.api();
-                this.connection = new WebSocket('ws://localhost:3000');
+                this.connection = new WebSocket(process.env.VUE_APP_BROKER_CONNECTION);
 
                 instance = this;
             }

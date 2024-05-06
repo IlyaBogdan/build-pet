@@ -3,7 +3,7 @@ var Storage = require('node-storage');
 
 const store = new Storage('./store.json');
 
-const BACKEND_URL: String = 'http://127.0.0.1:8000/api/broker';
+const BACKEND_URL: String = `${process.env.BACKEND_URL}/api/broker`;
 const BROKER_TOKEN: String|null = store.get('access_token');
 
 const request = (endpoint: String, data: any, method: 'POST' | 'GET' | 'PUT' | 'DELETE' | 'PATCH') => {

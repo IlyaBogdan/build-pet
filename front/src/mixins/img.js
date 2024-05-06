@@ -8,7 +8,7 @@ export default {
     },
     methods: {
         staticUrl(relationUrl) {
-            return relationUrl ? `http://localhost:8000/${relationUrl}` : '';
+            return relationUrl ? `${process.env.VUE_APP_BACKEND_PUBLIC}/${relationUrl}` : '';
         }
     },
 }

@@ -1,15 +1,13 @@
-FROM php:8.2.0-fpm-alpine
+FROM php:8.2-fpm
 
-RUN apk add --no-cache curl build-base zlib-dev oniguruma-dev autoconf bash
-
-ARG PUID=1000
-ARG PGID=1000
-RUN apk --no-cache add shadow && \
-    groupmod -o -g ${PGID} www-data && \
-    usermod -o -u ${PUID} -g www-data www-data
+RUN apt-get update && apt-get install -y zlib1g-dev g++ git libicu-dev zip libzip-dev zip \
+    && docker-php-ext-install intl opcache pdo pdo_mysql \
+    && pecl install apcu \
+    && docker-php-ext-enable apcu \
+    && docker-php-ext-configure zip \
+    && docker-php-ext-install zip
 
 WORKDIR /var/www/html
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN curl -sS https://get.symfony.com/cli/installer | bash
-CMD ["symfony", "serve"]
+RUN curl -sS https://get.symfony.com/cli/installer | bash -s -- --install-dir=/usr/local/bin

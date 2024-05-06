@@ -1,4 +1,4 @@
-const BACKEND_URL = 'http://127.0.0.1:8000/api';
+const BACKEND_URL = process.env.VUE_APP_BACKEND_URL_CLIENT;
 
 const request = async (url, params, method) => {
     let headers = {

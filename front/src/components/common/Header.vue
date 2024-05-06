@@ -23,7 +23,7 @@
             <div class="auth_status authenticated__content-profile">
                 <router-link to="/personal" class="authenticated__content-info">
                     <div class="username">{{ $store.state.authModule.user.first_name }}</div>
-                    <avatar-icon :avatar="`http://localhost:8000/${$store.state.authModule.user.avatar}`"/>
+                    <avatar-icon :avatar="userAvatar"/>
                 </router-link>
                 <button-ui type="primary" @click="logout">Logout</button-ui>
             </div>
@@ -53,6 +53,11 @@ export default {
             console.log(this.$store.state.sideBar.opened);
         }
     },
+    computed: {
+        userAvatar() {
+            return this.$store.state.authModule.user.avatar ? `${process.env.VUE_APP_BACKEND_PUBLIC}${this.$store.state.authModule.user.avatar}` : '';
+        }
+    }
 }
 
 </script>
