@@ -118,7 +118,10 @@ export const api: BrokerApi = {
                     .then((response: ChatDto) => {
                         const users = broker.getUsersOnline(response.users.map((user: UserDto) => user.id));
                         broker.actualizeChatInfo(response, users.map((user: UserDto) => user.id));
-                        resolve({ method: EChatResponses.activeChat, chat: Object.assign(response, {online: users.map((user: UserDto) => user.id)})});
+                        resolve({ 
+                            method: EChatResponses.activeChat,
+                            chat: Object.assign(response, {online: users.map((user: UserDto) => user.id)})
+                        });
                     });
             });
         }

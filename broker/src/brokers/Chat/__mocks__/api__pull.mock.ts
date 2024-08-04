@@ -1,9 +1,7 @@
 import { UserDto } from "../../dto/user.dto";
+import { mockUser_1 } from "../../../../test/__mocks__/chat/users";
 
-export const mockUserInfo: UserDto = {
-    id: 1,
-    email: 'someuser@gmail.com',
-    first_name: 'John',
-    last_name: 'Snow',
-    created_at: new Date('2024-04-03')
-}
+/**
+ * Mock data for user info
+ */
+export const mockUserInfo: UserDto = mockUser_1
