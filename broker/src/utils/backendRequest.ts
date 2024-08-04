@@ -1,4 +1,5 @@
 import fetch from 'node-fetch';
+import { ERequestMethods } from './ERequestMethods';
 var Storage = require('node-storage');
 
 const store = new Storage('./store.json');
@@ -7,25 +8,14 @@ const BACKEND_URL: string = `${process.env.BACKEND_URL}/api/broker`;
 const BROKER_TOKEN: string|null = store.get('access_token');
 
 /**
- * Allowed request methods
- */
-enum ERequestMethods {
-    POST = 'POST',
-    GET = 'GET',
-    PUT = 'PUT',
-    DELETE = 'DELETE',
-    PATCH = 'PATCH'
-} 
-
-/**
  * Request to backend from broker
  * 
  * @param {string} endpoint endpoint for backend request
  * @param {any} data request body
  * @param { ERequestMethods } method request method
- * @returns 
+ * @returns {Promise<any>}
  */
-const request = async (endpoint: string, data: any, method: ERequestMethods) => {
+const request = async (endpoint: string, data: any, method: ERequestMethods): Promise<any> => {
     let requestInit = {
         method,
         headers: {

@@ -1,7 +1,6 @@
-import { broadCast } from "../../abstracts/Broker/BroacastEvent";
 import { BrokerApi } from "../../abstracts/Broker/BrokerApi";
-import { IChatBrokerMessage } from "./message.type";
-import { BackendAPI } from "../../utils/API";
+import { IChatBrokerMessage } from "./IChatBrokerMessage";
+import { BackendAPI } from "../../utils/BackendAPI";
 import { UserDto } from "../dto/user.dto";
 import { ChatDto } from "../dto/chat.dto";
 import { ChatBroker } from "./ChatBroker";

@@ -8,8 +8,8 @@ interface ObjectInterface {
 export class BrokerMessage<T = any> {
 
     private static instance: BrokerMessage<ObjectInterface>;
-    public method: String;
-    public token: String;
+    public method: string;
+    public token: string;
 
     constructor(message: RawData) {
         const json = JSON.parse(message.toString());
