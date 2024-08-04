@@ -4,6 +4,7 @@ import { BrokerMessage } from './abstracts/Broker/BrokerMessage';
 import { SessionStore, WsSession } from './SessionStore';
 import { request } from './utils/backendRequest';
 import { ERequestMethods } from './utils/ERequestMethods';
+import { PORT } from './consts';
 var Storage = require('node-storage');
 
 const store = new Storage('./store.json');
@@ -55,8 +56,8 @@ const WebSocketEntry = (() => {
                 await request('', {}, ERequestMethods.POST)
                     .then((response) => {
                         store.put('accessToken', response.access_token);
-                        server = new WebSocketServer({ port: 3000 });
-                        console.log('WebSocket is running on 3000 port');
+                        server = new WebSocketServer({ port: PORT });
+                        console.log(`WebSocket is running on ${PORT} port`);
                         server.on('connection', function (ws) {
                             ws.on('message', WebSocketEntry.main(ws));
                         });
