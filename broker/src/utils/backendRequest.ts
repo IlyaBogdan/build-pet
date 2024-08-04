@@ -36,4 +36,4 @@ const request = async (endpoint: string, data: any, method: ERequestMethods): Pr
         })
 }
 
-export { request };
+export { request, BACKEND_URL };
