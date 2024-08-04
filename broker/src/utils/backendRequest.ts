@@ -3,10 +3,29 @@ var Storage = require('node-storage');
 
 const store = new Storage('./store.json');
 
-const BACKEND_URL: String = `${process.env.BACKEND_URL}/api/broker`;
-const BROKER_TOKEN: String|null = store.get('access_token');
+const BACKEND_URL: string = `${process.env.BACKEND_URL}/api/broker`;
+const BROKER_TOKEN: string|null = store.get('access_token');
 
-const request = (endpoint: String, data: any, method: 'POST' | 'GET' | 'PUT' | 'DELETE' | 'PATCH') => {
+/**
+ * Allowed request methods
+ */
+enum ERequestMethods {
+    POST = 'POST',
+    GET = 'GET',
+    PUT = 'PUT',
+    DELETE = 'DELETE',
+    PATCH = 'PATCH'
+} 
+
+/**
+ * Request to backend from broker
+ * 
+ * @param {string} endpoint endpoint for backend request
+ * @param {any} data request body
+ * @param { ERequestMethods } method request method
+ * @returns 
+ */
+const request = async (endpoint: string, data: any, method: ERequestMethods) => {
     let requestInit = {
         method,
         headers: {

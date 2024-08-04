@@ -1,6 +1,6 @@
 import { broadCast } from "../../abstracts/Broker/BroacastEvent";
 import { BrokerApi } from "../../abstracts/Broker/BrokerApi";
-import { ChatBrokerMessage } from "./message.type";
+import { IChatBrokerMessage } from "./message.type";
 import { BackendAPI } from "../../utils/API";
 import { UserDto } from "../dto/user.dto";
 import { ChatDto } from "../dto/chat.dto";
@@ -17,7 +17,7 @@ export const api: BrokerApi = {
      */
     pull: {
         format: { method: 'pull', user: Object },
-        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
+        action: (body: IChatBrokerMessage, broker: ChatBroker) => {
             return new Promise((resolve, reject) => {
                 BackendAPI.getUserByToken(body.token)
                     .then((response: UserDto) => {
@@ -32,7 +32,7 @@ export const api: BrokerApi = {
      */
     setTyping: {
         format: { method: 'setTyping', user: Object, chat: Object, typing: Boolean },
-        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
+        action: (body: IChatBrokerMessage, broker: ChatBroker) => {
             return new Promise((resolve, reject) => {
                 const users = body.chat.users.filter((userInChat) => userInChat.id != body.user.id);
                 broker.notifyUserTyping(body.user, users, body.chat.id, body.typing);
@@ -47,7 +47,7 @@ export const api: BrokerApi = {
      */
     createChat: {
         format: { method: 'createChat', users: Array<number> },
-        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
+        action: (body: IChatBrokerMessage, broker: ChatBroker) => {
             const users: Array<number> = body.users;
             const chat = {
                 users,
@@ -75,7 +75,7 @@ export const api: BrokerApi = {
      */
     getChat: {
         format: { method: 'getChat', chat: Object },
-        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
+        action: (body: IChatBrokerMessage, broker: ChatBroker) => {
             return new Promise((resolve, reject) => {
                 BackendAPI.getChatInfo(body.chat.id)
                     .then((response: ChatDto) => {
@@ -90,7 +90,7 @@ export const api: BrokerApi = {
 
     chatClosed: {
         format: { method: 'chatClosed', chat: Object },
-        action: (body: ChatBrokerMessage) => {
+        action: (body: IChatBrokerMessage) => {
             return new Promise((resolve, reject) => {
                 BackendAPI.getChatInfo(body.chat.id)
                     .then((response: ChatDto) => {
@@ -108,7 +108,7 @@ export const api: BrokerApi = {
      */
     sendMessage: {
         format: { method: 'sendMessage', message: {} },
-        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
+        action: (body: IChatBrokerMessage, broker: ChatBroker) => {
             return new Promise((resolve, reject) => {
                 BackendAPI.saveMessage(body.chat.id, body.message)
                     .then((response: ChatDto) => {
@@ -124,7 +124,7 @@ export const api: BrokerApi = {
      */
     chatList: {
         format: { method: 'getChats', user: Object },
-        action: (body: ChatBrokerMessage) => {
+        action: (body: IChatBrokerMessage) => {
             return new Promise((resolve, reject) => {
                 BackendAPI.getUsersChats(body.user.id, body.token)
                     .then((chats: Array<ChatDto>) => {
@@ -138,7 +138,7 @@ export const api: BrokerApi = {
      */
     getUsers: {
         format: { method: 'getUsers' },
-        action: (body: ChatBrokerMessage) => {
+        action: (body: IChatBrokerMessage) => {
             return new Promise((resolve, reject) => {
                 BackendAPI.getUsers()
                     .then((response: Array<UserDto>) => {
@@ -149,7 +149,7 @@ export const api: BrokerApi = {
     },
     getOnlineUsers: {
         format: { method: 'getOnlineUser', user: Object },
-        action: (body: ChatBrokerMessage, broker: ChatBroker) => {
+        action: (body: IChatBrokerMessage, broker: ChatBroker) => {
             return new Promise((resolve, reject) => {
                 const users = broker.getUsersOnline(body.users);
                 resolve({ method: 'usersOnline', users });

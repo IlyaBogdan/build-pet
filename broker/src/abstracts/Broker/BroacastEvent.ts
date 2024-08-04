@@ -1,5 +1,3 @@
-
-
 import { EventEmitter } from 'events';
 import { WebSocketEntry } from '../..';
 import { WebSocket } from 'ws';
@@ -28,19 +26,18 @@ export class BroadcastEvent extends EventEmitter {
 const broadCast = new BroadcastEvent();
 
 broadCast.on('broadcast', (data: MessageFormat) => {
-  console.log(`Broadcast: `, data);
+  WebSocketEntry.getServer()
+    .then((server) => {
+      //const clients = data.clients ?? server.clients;
+      const clients = server.clients;
 
-  const server = WebSocketEntry.getServer();
+      clients.forEach((client: WebSocket) => {
+        const message = JSON.stringify(data);
 
-  //const clients = data.clients ?? server.clients;
-  const clients = server.clients;
-
-  clients.forEach((client: WebSocket) => {
-    const message = JSON.stringify(data);
-
-    if (data.clients) delete data.clients;
-    client.send(message);
-  })
+        if (data.clients) delete data.clients;
+        client.send(message);
+      })
+    });
 });
 
 export { broadCast }
