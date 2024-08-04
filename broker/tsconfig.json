@@ -7,6 +7,13 @@
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,    
     "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": ["src/*"],
+      "@brokers/*": ["src/brokers/*"],
+      "@utils/*": ["src/utils/*"],
+      "@mocks/*": ["test/__mocks__/*"]
+    }
   },
   "include": [
     "src/**/*",
